@@ -7,10 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rest" />
-        <module name="ear" />
         <module name="kafkaStreams" />
-        <module name="restClient" />
         <module name="client" />
+        <module name="ear" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +19,7 @@
       <module name="logging" target="1.5" />
       <module name="primary-source" target="1.5" />
       <module name="projects" target="1.5" />
+      <module name="restClient" target="1.7" />
       <module name="servlet" target="1.5" />
       <module name="servlets" target="1.5" />
       <module name="web" target="1.7" />
