@@ -1,3 +1,5 @@
+package controllers;
+
 @RestController
 @RequestMapping("debits")
 public class DebitsController {

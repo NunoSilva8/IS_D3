@@ -1,3 +1,6 @@
+package controllers;
+
+import java.util.List;
 
 /**
  * Rest Controller For Managers
@@ -6,7 +9,7 @@
 @RequestMapping("currency")
 public class CurrencyController {
 
-    public ManagerController() {
+    public CurrencyController() {
     }
 
     /**
