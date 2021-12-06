@@ -6,8 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="KafkaStreams" />
+        <module name="rest" />
+        <module name="ear" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ejbs" target="16" />
+      <module name="jpa" target="1.7" />
+      <module name="logging" target="1.5" />
+      <module name="primary-source" target="1.5" />
+      <module name="projects" target="1.5" />
+      <module name="servlet" target="1.5" />
+      <module name="servlets" target="1.5" />
+      <module name="web" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
