@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/'rest client'/pom.xml" />
         <option value="$PROJECT_DIR$/ejbs/pom.xml" />
         <option value="$PROJECT_DIR$/jpa/pom.xml" />
+        <option value="$PROJECT_DIR$/kafkaStreams/pom.xml" />
         <option value="$PROJECT_DIR$/restClient/pom.xml" />
         <option value="$PROJECT_DIR$/web/pom.xml" />
       </set>

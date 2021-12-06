@@ -7,8 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rest" />
-        <module name="kafkaStreams" />
         <module name="client" />
+        <module name="KafkaStreams" />
+        <module name="restclient" />
         <module name="ear" />
       </profile>
     </annotationProcessing>
@@ -16,6 +17,7 @@
       <module name="'rest client'" target="1.7" />
       <module name="ejbs" target="16" />
       <module name="jpa" target="1.7" />
+      <module name="kafkaStreams" target="1.7" />
       <module name="logging" target="1.5" />
       <module name="primary-source" target="1.5" />
       <module name="projects" target="1.5" />
