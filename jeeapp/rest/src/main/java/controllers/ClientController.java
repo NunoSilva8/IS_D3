@@ -1,9 +1,9 @@
 
 @RestController
 @RequestMapping("client")
-public class ControllerController {
+public class ClientController {
 
-    public ControllerController() {
+    public ClientController() {
     }
 
     /**

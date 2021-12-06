@@ -4,7 +4,7 @@
  */
 @RestController
 @RequestMapping("currency")
-public class ManagerController {
+public class CurrencyController {
 
     public ManagerController() {
     }
