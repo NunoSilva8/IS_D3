@@ -9,9 +9,12 @@
         <module name="rest" />
         <module name="ear" />
         <module name="kafkaStreams" />
+        <module name="restClient" />
+        <module name="client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="'rest client'" target="1.7" />
       <module name="ejbs" target="16" />
       <module name="jpa" target="1.7" />
       <module name="logging" target="1.5" />
