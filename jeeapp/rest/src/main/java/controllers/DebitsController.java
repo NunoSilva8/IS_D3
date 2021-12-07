@@ -1,3 +1,4 @@
+package controllers;
 
 @Path("/debits")
 @Produces(MediaType.APPLICATION.JSON)

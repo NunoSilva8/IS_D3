@@ -1,12 +1,17 @@
+package controllers;
+
+import java.util.List;
 
 /**
  * Rest Controller For Managers
  */
+
 @Path("/currency")
 @Produces(MediaType.APPLICATION.JSON)
-public class ManagerController {
+public class CurrencyController {
 
-    public ManagerController() {
+
+    public CurrencyController() {
     }
 
     /**

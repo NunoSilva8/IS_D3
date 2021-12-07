@@ -1,10 +1,13 @@
+package controllers;
+
+import java.util.List;
 
 
 @Path("/client")
 @Produces(MediaType.APPLICATION.JSON)
-public class ControllerController {
+public class ClientController {
 
-    public ControllerController() {
+    public ClientController() {
     }
 
     /**
