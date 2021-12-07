@@ -8,7 +8,8 @@ public class Manager{
     private String name;
     private List<Client> clients;
 
-    public Manager(String name) {
+    public Manager(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -20,14 +21,35 @@ public class Manager{
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
+    public Retorno addClient(Client client){
+        //TODO: provavelmente vai ser preciso verificar isto por id e não por objeto
+        if(clients.contains(client)){
+            return new Retorno(false, "O cliente já pertence ao Manager de id: " + this.getId());
+        }
+        else{
+            clients.add(client);
+            return new Retorno(true, "O cliente pertence agora ao manager de id: " + this.getId());
+        }
+    }
+
+    public Retorno removeClient(Client client){
+        //TODO: provavelmente vai ser preciso verificar isto por id e não por objeto
+        if(!clients.contains(client)){
+            return new Retorno(false, "O cliente não pertence ao Manager de id " + this.getId());
+        }
+        else{
+            clients.remove(client);
+            return new Retorno(true, "O cliente deixou de pertencer ao manager de id: " + this.getId());
+        }
+    }
 
     @Override
     public String toString() {

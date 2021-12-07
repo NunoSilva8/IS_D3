@@ -1,5 +1,6 @@
 package entities;
 
+import java.sql.Date;
 import java.util.List;
 
 public class Client{
@@ -52,6 +53,26 @@ public class Client{
 
     public void setManager(Manager manager) {
         this.manager = manager;
+    }
+
+    public Retorno addPayment(Payment payment){
+        if(payment.getDate().after(new Date(System.currentTimeMillis()))){
+
+        }
+        else{
+            if(!payment.getDebit())
+                this.credits += payment.getCurrency().getToEuro() * payment.getAmount();
+            else
+                if(this.getCredits() > payment.getCurrency().getToEuro() * payment.getAmount())
+                    this.credits -= payment.getCurrency().getToEuro() * payment.getAmount();
+                else
+                    return new Retorno(false, "The user with the id " + this.getId() +
+                            "does not have enough credits!");
+        }
+
+        this.payments.add(payment);
+
+        return new Retorno(true, "Operation successfull");
     }
 
     @Override
