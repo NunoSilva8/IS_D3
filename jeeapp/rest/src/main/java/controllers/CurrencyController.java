@@ -2,8 +2,8 @@
 /**
  * Rest Controller For Managers
  */
-@RestController
-@RequestMapping("currency")
+@Path("/currency")
+@Produces(MediaType.APPLICATION.JSON)
 public class ManagerController {
 
     public ManagerController() {
@@ -14,7 +14,8 @@ public class ManagerController {
      * @param managerName
      * @return
      */
-    @PostMapping("add-currency")
+    @POST
+    @Path("/add-currency")
     public String addCurrency(String currencyName, Double exchangeToEuro){
          /*
             1. If currencyName existe => return erro
@@ -24,7 +25,8 @@ public class ManagerController {
          */
     }
 
-    @GetMapping("get-currencies")
+    @GET
+    @Path("/get-currencies")
     public List<String> getCurrencies(){
         return null;
     }

@@ -1,6 +1,7 @@
 
-@RestController
-@RequestMapping("client")
+
+@Path("/client")
+@Produces(MediaType.APPLICATION.JSON)
 public class ControllerController {
 
     public ControllerController() {
@@ -12,7 +13,8 @@ public class ControllerController {
      * @param clientName
      * @return
      */
-    @PostMapping("add-client")
+    @POST
+    @Path("/add-client")
     public String addClient(Integer managerId, String clientName){
         /*
             1. If manager não existe... return erro
@@ -22,7 +24,7 @@ public class ControllerController {
          */
     }
 
-    @GetMapping("get-clients")
+    @GET("/get-clients")
     public List<String> getClients(){
         return null;
     }
@@ -31,32 +33,32 @@ public class ControllerController {
      * in Euros
      * @return
      */
-    @GetMapping("get-client-credit")
+    @GET("/get-client-credit")
     public Double getClientCredit(){
         return null;
     }
 
-    @GetMapping("get-client-payments")
+    @GET("/get-client-payments")
     public Double getClientPayments(){
         return null;
     }
 
-    @GetMapping("get-client-balance")
+    @GET("/get-client-balance")
     public Double getClientBalance(){
         return null;
     }
 
-    @GetMapping("get-client-bill-last-month")
+    @GET("/get-client-bill-last-month")
     public Double getClientBillLastMonth(){
         return null;
     }
 
-    @GetMapping("get-clients-no-payments-last-two-months")
+    @GET("/get-clients-no-payments-last-two-months")
     public List<String> getClientsNoPaymentsLastTwoMonths(){
         return null;
     }
 
-    @GetMapping("get-client-most-debt")
+    @GET("/get-client-most-debt")
     public List<String> getClientMostDebt(){
         return null;
     }

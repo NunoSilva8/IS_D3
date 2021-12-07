@@ -1,21 +1,25 @@
-@RestController
-@RequestMapping("debits")
+
+@Path("/debits")
+@Produces(MediaType.APPLICATION.JSON)
 public class DebitsController {
 
     public DebitsController() {
     }
 
-    @GetMapping("get-total-balance")
+    @GET
+    @Path("/get-total-balance")
     public Double getTotalBalance(){
         return null;
     }
 
-    @GetMapping("get-total-payments")
+    @GET
+    @Path("/get-total-payments")
     public Double getTotalPayments(){
         return null;
     }
 
-    @GetMapping("get-total-credits")
+    @GET
+    @Path("/get-total-credits")
     public Double getTotalCredits(){
         return null;
     }

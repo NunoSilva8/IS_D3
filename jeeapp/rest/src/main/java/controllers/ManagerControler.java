@@ -2,8 +2,9 @@
 /**
  * Rest Controller For Managers
  */
-@RestController
-@RequestMapping("manager")
+
+@Path("/manager")
+@Produces(MediaType.APPLICATION.JSON)
 public class ManagerController {
 
     public ManagerController() {
@@ -14,7 +15,8 @@ public class ManagerController {
      * @param managerName
      * @return
      */
-    @PostMapping("add-manager")
+    @POST
+    @Path("/add-manager")
     public String addManager(String managerName){
          /*
             0? Verificar se managerName existe?
@@ -24,12 +26,14 @@ public class ManagerController {
          */
     }
 
-    @GetMapping("get-managers")
+    @GET
+    @Path("/get-managers")
     public List<String> getManagers(){
         return null;
     }
 
-    @GetMapping("get-managers-most-revenue")
+    @GET
+    @Path("/get-managers-most-revenue")
     public List<String> getManagersMostRevenue(){
         return null;
     }
