@@ -1,5 +1,10 @@
 package controllers;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -7,7 +12,7 @@ import java.util.List;
  */
 
 @Path("/manager")
-@Produces(MediaType.APPLICATION.JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ManagerController {
 
     public ManagerController() {
@@ -27,6 +32,7 @@ public class ManagerController {
             1. Add manager
             2. Return success
          */
+        return null;
     }
 
     @GET

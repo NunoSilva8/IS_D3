@@ -1,5 +1,10 @@
 package controllers;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -7,7 +12,7 @@ import java.util.List;
  */
 
 @Path("/currency")
-@Produces(MediaType.APPLICATION.JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class CurrencyController {
 
 
@@ -16,18 +21,20 @@ public class CurrencyController {
 
     /**
      * add currency method
-     * @param managerName
+     * @param currencyName
+     * @param exchangeToEuro
      * @return
      */
     @POST
     @Path("/add-currency")
-    public String addCurrency(String currencyName, Double exchangeToEuro){
+    public String addCurrency(String currencyName, Long exchangeToEuro){
          /*
             1. If currencyName existe => return erro
             2. Else...
             2.1. Add currency
             2.2. Return success
          */
+        return null;
     }
 
     @GET

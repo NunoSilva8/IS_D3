@@ -1,10 +1,13 @@
 package controllers;
-
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-
 @Path("/client")
-@Produces(MediaType.APPLICATION.JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class ClientController {
 
     public ClientController() {
@@ -25,9 +28,11 @@ public class ClientController {
             2.1. Add client
             2.2. Return success
          */
+        return null;
     }
 
-    @GET("/get-clients")
+    @GET
+    @Path("/get-clients")
     public List<String> getClients(){
         return null;
     }
@@ -36,32 +41,38 @@ public class ClientController {
      * in Euros
      * @return
      */
-    @GET("/get-client-credit")
-    public Double getClientCredit(){
+    @GET
+    @Path("/get-client-credit")
+    public Long getClientCredit(){
         return null;
     }
 
-    @GET("/get-client-payments")
-    public Double getClientPayments(){
+    @GET
+    @Path("/get-client-payments")
+    public Long getClientPayments(){
         return null;
     }
 
-    @GET("/get-client-balance")
-    public Double getClientBalance(){
+    @GET
+    @Path("/get-client-balance")
+    public Long getClientBalance(){
         return null;
     }
 
-    @GET("/get-client-bill-last-month")
-    public Double getClientBillLastMonth(){
+    @GET
+    @Path("/get-client-bill-last-month")
+    public Long getClientBillLastMonth(){
         return null;
     }
 
-    @GET("/get-clients-no-payments-last-two-months")
+    @GET
+    @Path("/get-clients-no-payments-last-two-months")
     public List<String> getClientsNoPaymentsLastTwoMonths(){
         return null;
     }
 
-    @GET("/get-client-most-debt")
+    @GET
+    @Path("/get-client-most-debt")
     public List<String> getClientMostDebt(){
         return null;
     }
