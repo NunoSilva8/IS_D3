@@ -2,6 +2,7 @@ package kafka;
 
 import org.apache.kafka.clients.consumer.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -9,32 +10,44 @@ public class SimpleConsumer {
     public static void main(String[] args) throws Exception {
         //Assign topicName to string variable
         //String topicName = args[0].toString();
-        String topicName = "topic1";
+        String topicName = "dbinfo";
+
         // create instance for properties to access producer configs
         Properties props = new Properties();
+
         //Assign localhost id
         props.put("bootstrap.servers", "localhost:9092");
+
         //Set acknowledgements for producer requests.
         props.put("acks", "all");
+
         //If the request fails, the producer can automatically retry,
         props.put("retries", 0);
+
         //Specify buffer size in config
         props.put("batch.size", 16384);
+
         //Reduce the no of requests less than 0
         props.put("linger.ms", 1);
+
         //The buffer.memory controls the total amount of memory available to the producer for buffering.
         props.put("buffer.memory", 33554432);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.LongDeserializer");
-        Consumer<String, Long> consumer = new KafkaConsumer<>(props);
+
+        Consumer<String, String> consumer = new KafkaConsumer<>(props);
+        String clients;
+        Boolean keepOnGoing = true;
         consumer.subscribe(Collections.singletonList(topicName));
-        while (true) {
-            ConsumerRecords<String, Long> records = consumer.poll(Long.MAX_VALUE);
-            for (ConsumerRecord<String, Long> record : records) {
+
+        do {
+            ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+            for (ConsumerRecord<String, String> record : records) {
                 System.out.println(record.key() + " => " + record.value());
             }
-        }
-        //consumer.close();
+        }while (keepOnGoing);
+
+        consumer.close();
     }
 }

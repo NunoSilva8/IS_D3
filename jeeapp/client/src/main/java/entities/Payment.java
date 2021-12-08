@@ -51,7 +51,6 @@ public class Payment {
     @Override
     public String toString() {
         return "Payment{" +
-                "id=" + id +
                 ", date=" + date +
                 ", currency=" + currency +
                 ", amount=" + amount +
