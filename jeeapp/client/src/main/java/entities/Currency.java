@@ -1,8 +1,6 @@
 package entities;
 
-import java.sql.Date;
-
-public class Currency{
+public class Currency {
 
     private Integer id;
     private String name;

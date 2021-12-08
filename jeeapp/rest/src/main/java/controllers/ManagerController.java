@@ -1,5 +1,8 @@
 package controllers;
 
+import entities.Manager;
+import entities.Retorno;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,7 +28,7 @@ public class ManagerController {
      */
     @POST
     @Path("/add-manager")
-    public String addManager(String managerName){
+    public Retorno addManager(String managerName){
          /*
             0? Verificar se managerName existe?
 
@@ -37,13 +40,13 @@ public class ManagerController {
 
     @GET
     @Path("/get-managers")
-    public List<String> getManagers(){
+    public List<Manager> getManagers(){
         return null;
     }
 
     @GET
     @Path("/get-managers-most-revenue")
-    public List<String> getManagersMostRevenue(){
+    public List<Manager> getManagersMostRevenue(){
         return null;
     }
 }

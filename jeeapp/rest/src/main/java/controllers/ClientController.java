@@ -1,4 +1,6 @@
 package controllers;
+import entities.Client;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,7 +35,7 @@ public class ClientController {
 
     @GET
     @Path("/get-clients")
-    public List<String> getClients(){
+    public List<Client> getClients(){
         return null;
     }
 

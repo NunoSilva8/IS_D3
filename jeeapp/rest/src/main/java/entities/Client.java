@@ -1,13 +1,15 @@
 package entities;
 
+import java.sql.Date;
 import java.util.List;
 
 public class Client{
 
     private Integer id;
     private String name;
-    private Long credits;
+    private Long balance;
     private List<Payment> payments;
+    private List<Credit> credits;
     private Manager manager;
 
     public Client(String name) {
@@ -30,13 +32,9 @@ public class Client{
         this.name = name;
     }
 
-    public Long getCredits() {
-        return credits;
-    }
+    public Long getBalance() { return balance; }
 
-    public void setCredits(Long credits) {
-        this.credits = credits;
-    }
+    public void setBalance(Long balance) { this.balance = balance; }
 
     public List<Payment> getPayments() {
         return payments;
@@ -44,6 +42,14 @@ public class Client{
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+    }
+
+    public List<Credit> getCredits() {
+        return credits;
+    }
+
+    public void setCredits(List<Credit> credits) {
+        this.credits = credits;
     }
 
     public Manager getManager() {
@@ -54,13 +60,24 @@ public class Client{
         this.manager = manager;
     }
 
+    public Retorno addCredit(Credit credit){
+        this.balance += credit.getCurrency().getToEuro() * credit.getAmount();
+        return new Retorno(true, "Operation successfull");
+    }
+
+    public Retorno addPayment(Payment payment){
+        this.balance -= payment.getCurrency().getToEuro() * payment.getAmount();
+        return new Retorno(true, "Operation successfull");
+    }
+
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", credits=" + credits +
+                ", balance=" + balance +
                 ", payments=" + payments +
+                ", credits=" + credits +
                 '}';
     }
 }

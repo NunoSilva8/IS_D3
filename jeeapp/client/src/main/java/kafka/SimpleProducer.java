@@ -1,10 +1,13 @@
 package kafka;
 
+import entities.Credit;
+import entities.Currency;
+import entities.Payment;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.util.Properties;
+import java.util.*;
 
 public class SimpleProducer {
     public static void main(String[] args) throws Exception {
@@ -26,10 +29,35 @@ public class SimpleProducer {
         //The buffer.memory controls the total amount of memory available to the producer for buffering.
         props.put("buffer.memory", 33554432);
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.LongSerializer");
-        Producer<String, Long> producer = new KafkaProducer<>(props);
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        Producer<String, String> producer = new KafkaProducer<>(props);
+        Boolean keepOnGoing = true;
+        Long amount;
+        List<Currency> currencies = new ArrayList<>();
+        Currency selectedCurrency;
+        Random rand;
+        List<String> typeOfOperation = new ArrayList<>(List.of("Credit", "Payment"));
+        String key;
+
+        do{
+            amount = (long)(Math.random() * 10000L);
+            rand = new Random();
+            selectedCurrency = currencies.get(rand.nextInt(currencies.size()));
+            key = typeOfOperation.get(rand.nextInt(typeOfOperation.size()));
+
+            if(key.equals("Credit")){
+                producer.send(new ProducerRecord<String, String>(topicName, key, new Credit( null, selectedCurrency, amount).toString()));
+            }
+            else{
+                producer.send(new ProducerRecord<String, String>(topicName, key, new Payment(selectedCurrency, amount ).toString()));
+            }
+        }while(keepOnGoing);
+
+
+
         for (int i = 0; i < 1000; i++) {
-            producer.send(new ProducerRecord<String, Long>(topicName, Integer.toString(i), (long) i));
+
             if (i % 100 == 0)
                 System.out.println("Sending message " + (i + 1) + " to topic " + topicName);
         }
