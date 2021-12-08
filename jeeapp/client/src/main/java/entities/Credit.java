@@ -2,16 +2,18 @@ package entities;
 
 import java.sql.Date;
 
-
-public class Payment {
+public class Credit {
 
     private Integer id;
-    private Date date;
+    private Date deadline;
     private Currency currency;
     private Long amount;
 
-    public Payment(Currency currency, Long amount, Boolean isDebit) {
-        this.date = new Date(System.currentTimeMillis());
+    public Credit(Date deadline, Currency currency, Long amount) {
+        if(!deadline.after(new Date(System.currentTimeMillis())))
+            this.deadline = new Date(new Date(System.currentTimeMillis()).getTime() + (1000*60*60*24)); //Data de amanhã
+        else
+            this.deadline = deadline;
         this.currency = currency;
         this.amount = amount;
     }
@@ -25,11 +27,11 @@ public class Payment {
     }
 
     public Date getDate() {
-        return date;
+        return deadline;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Date deadline) {
+        this.deadline = deadline;
     }
 
     public Currency getCurrency() {
@@ -48,11 +50,12 @@ public class Payment {
         this.amount = amount;
     }
 
+
     @Override
     public String toString() {
         return "Payment{" +
                 "id=" + id +
-                ", date=" + date +
+                ", deadline=" + deadline +
                 ", currency=" + currency +
                 ", amount=" + amount +
                 '}';

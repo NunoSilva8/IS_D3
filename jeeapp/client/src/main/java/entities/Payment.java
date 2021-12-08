@@ -10,7 +10,7 @@ public class Payment {
     private Currency currency;
     private Long amount;
 
-    public Payment(Currency currency, Long amount, Boolean isDebit) {
+    public Payment(Currency currency, Long amount) {
         this.date = new Date(System.currentTimeMillis());
         this.currency = currency;
         this.amount = amount;
