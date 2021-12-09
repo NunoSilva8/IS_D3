@@ -6,12 +6,12 @@ import java.sql.Date;
 public class Payment {
 
     private Integer id;
-    private Date date;
+    private Date payDate;
     private Currency currency;
     private Long amount;
 
     public Payment(Currency currency, Long amount) {
-        this.date = new Date(System.currentTimeMillis());
+        this.payDate = new Date(System.currentTimeMillis());
         this.currency = currency;
         this.amount = amount;
     }
@@ -25,11 +25,11 @@ public class Payment {
     }
 
     public Date getDate() {
-        return date;
+        return payDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Date payDate) {
+        this.payDate = payDate;
     }
 
     public Currency getCurrency() {
@@ -51,7 +51,7 @@ public class Payment {
     @Override
     public String toString() {
         return "Payment{" +
-                ", date=" + date +
+                ", payDate=" + payDate +
                 ", currency=" + currency +
                 ", amount=" + amount +
                 '}';

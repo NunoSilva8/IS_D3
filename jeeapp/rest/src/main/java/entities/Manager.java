@@ -6,11 +6,13 @@ public class Manager{
 
     private Integer id;
     private String name;
+    private Long revenue;
     private List<Client> clients;
 
     public Manager(Integer id, String name) {
         this.id = id;
         this.name = name;
+        this.revenue = 0L;
     }
 
     public Integer getId() {
@@ -27,6 +29,14 @@ public class Manager{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(Long revenue) {
+        this.revenue = revenue;
     }
 
     public Retorno addClient(Client client){
@@ -56,6 +66,7 @@ public class Manager{
         return "Manager{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", revenue=" + revenue +
                 ", clients=" + clients +
                 '}';
     }
