@@ -63,8 +63,7 @@ public class Manager{
 
     @Override
     public String toString() {
-        return "Manager{" +
-                "id=" + id +
+        return "{id=" + id +
                 ", name='" + name + '\'' +
                 ", revenue=" + revenue +
                 ", clients=" + clients +

@@ -8,8 +8,8 @@ public class Client{
     private Integer id;
     private String name;
     private Long balance;
-    private List<Payment> payments;
-    private List<Credit> credits;
+    private Long sumPayments;
+    private Long sumCredits;
     private Manager manager;
 
     public Client(String name, Manager manager) {
@@ -38,22 +38,6 @@ public class Client{
 
     public void setBalance(Long balance) { this.balance = balance; }
 
-    public List<Payment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
-    }
-
-    public List<Credit> getCredits() {
-        return credits;
-    }
-
-    public void setCredits(List<Credit> credits) {
-        this.credits = credits;
-    }
-
     public Manager getManager() {
         return manager;
     }
@@ -62,23 +46,31 @@ public class Client{
         this.manager = manager;
     }
 
-    public Retorno addCredit(Credit credit){
-        this.balance += credit.getCurrency().getToEuro() * credit.getAmount();
-        return new Retorno(true, "Operation successfull");
+    public Long getSumPayments() {
+        return sumPayments;
     }
 
-    public Retorno addPayment(Payment payment){
-        this.balance -= payment.getCurrency().getToEuro() * payment.getAmount();
-        return new Retorno(true, "Operation successfull");
+    public Long getSumCredits() {
+        return sumCredits;
+    }
+
+    public void addCredit(Long amountInEuros){
+        this.balance += amountInEuros;
+        this.sumCredits += amountInEuros;
+    }
+
+    public void addPayment(Long amountInEuros){
+        this.balance -= amountInEuros;
+        this.sumPayments += amountInEuros;
     }
 
     @Override
     public String toString() {
-        return "Client{" +
-                ", name='" + name + '\'' +
+        return "{id= " + id +
+                ", name='" + name +
                 ", balance=" + balance +
-                ", payments=" + payments +
-                ", credits=" + credits +
+                ", payments=" + sumPayments +
+                ", credits=" + sumCredits +
                 '}';
     }
 }

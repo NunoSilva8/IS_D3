@@ -1,8 +1,6 @@
 package kafka;
 
-import entities.Credit;
 import entities.Currency;
-import entities.Payment;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -57,16 +55,32 @@ public class SimpleProducer {
             key = typeOfOperation.get(rand.nextInt(typeOfOperation.size()));
 
             if(key.equals("Credit")){
-                producer.send(new ProducerRecord<String, String>(creditsTopic, key, new Credit( null, selectedCurrency, amount).toString()));
+                producer.send(new ProducerRecord<String, String>(creditsTopic, key, creditToStream(selectedCurrency.getName(), amount, 1L))); //TODO: hardcoded
                 System.out.println("Sending message to topic " + creditsTopic);
             }
             else{
-                producer.send(new ProducerRecord<String, String>(paymentsTopic, key, new Payment(selectedCurrency, amount ).toString()));
+                producer.send(new ProducerRecord<String, String>(paymentsTopic, key, paymentToStream(selectedCurrency.getName(), amount,1L))); //TODO: hardcoded
                 System.out.println("Sending message to topic " + paymentsTopic);
             }
         }while(keepOnGoing);
 
 
         producer.close();
+    }
+
+    public static String creditToStream(String currency, Long amount, Long clientId) { //TODO: verificar se pode ser static
+        return "{deadline: " + new Date(System.currentTimeMillis()) + //TODO: retirar?
+                ", currency: " + currency +
+                ", amount: " + amount +
+                ", clientId: " + clientId.toString() +
+                '}';
+    }
+
+    public static String paymentToStream(String currency, Long amount,Long clientId) { //TODO: verificar se pode ser static
+        return "{payDate: " + new Date(System.currentTimeMillis()) + //TODO: retirar?
+                ", currency: " + currency +
+                ", amount: " + amount +
+                ", clientId: " + clientId.toString() +
+                '}';
     }
 }
