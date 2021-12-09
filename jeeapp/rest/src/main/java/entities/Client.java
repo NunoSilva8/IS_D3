@@ -12,8 +12,10 @@ public class Client{
     private List<Credit> credits;
     private Manager manager;
 
-    public Client(String name) {
+    public Client(String name, Manager manager) {
         this.name = name;
+        this.balance = 0L;
+        this.manager = manager;
     }
 
     public Integer getId() {
@@ -73,7 +75,6 @@ public class Client{
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
                 ", payments=" + payments +
