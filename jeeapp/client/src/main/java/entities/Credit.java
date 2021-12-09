@@ -53,7 +53,7 @@ public class Credit {
 
     @Override
     public String toString() {
-        return "Payment{" +
+        return "Credit{" +
                 ", deadline=" + deadline +
                 ", currency=" + currency +
                 ", amount=" + amount +

@@ -10,7 +10,7 @@ public class SimpleConsumer {
     public static void main(String[] args) throws Exception {
         //Assign topicName to string variable
         //String topicName = args[0].toString();
-        String topicName = "dbinfo";
+        String topicName = "results";
 
         // create instance for properties to access producer configs
         Properties props = new Properties();
@@ -34,7 +34,7 @@ public class SimpleConsumer {
         props.put("buffer.memory", 33554432);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.LongDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
         Consumer<String, String> consumer = new KafkaConsumer<>(props);
         String clients;
