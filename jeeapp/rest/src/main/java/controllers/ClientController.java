@@ -35,6 +35,7 @@ public class ClientController {
 
     @GET
     @Path("/get-clients")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Client> getClients(){
         return null;
     }
@@ -58,6 +59,24 @@ public class ClientController {
     @GET
     @Path("/get-client-balance")
     public Long getClientBalance(){
+        return null;
+    }
+
+    @GET
+    @Path("/get-clients-credit")
+    public Long getClientsCredit(){
+        return null;
+    }
+
+    @GET
+    @Path("/get-clients-payments")
+    public Long getClientsPayments(){
+        return null;
+    }
+
+    @GET
+    @Path("/get-clients-balance")
+    public Long getClientsBalance(){
         return null;
     }
 

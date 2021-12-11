@@ -11,7 +11,6 @@ import java.util.*;
 
 public class ConsumerProducer {
 
-
     public static void main(String[] args) throws Exception {
         String consumerTopicName = "db-info-client";
         String creditsTopic = "credits";
