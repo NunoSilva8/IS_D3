@@ -1,5 +1,11 @@
 package pt.uc.dei;
 
+import entities.Retorno;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 import java.util.Scanner;
 
 public class Admin {
@@ -7,6 +13,8 @@ public class Admin {
         Boolean keepOnGoing = true;
         Scanner scanf = new Scanner(System.in);
         Integer opt = 0;
+
+        Client client = ClientBuilder.newClient();
 
         System.out.println("------------------------------------------------------\n");
         System.out.println("\n" +
@@ -42,24 +50,24 @@ public class Admin {
             System.out.println();
 
 
-            optSwitch(opt, keepOnGoing);
+            optSwitch(opt, keepOnGoing, client);
 
 
         }while(keepOnGoing);
 
     }
 
-    private static void optSwitch(Integer opt, Boolean keepOnGoing) {
+    private static void optSwitch(Integer opt, Boolean keepOnGoing, Client client) {
 
         switch(opt){
             case 1:
-                addManager();
+                addManager(client);
                 break;
             case 2:
-                addClient();
+                addClient(client);
                 break;
             case 3:
-                addCurrency();
+                addCurrency(client);
                 break;
             case 4:
                 listManagers();
@@ -109,13 +117,31 @@ public class Admin {
         opt = 0;
     }
 
-    private static void addManager() {
+    private static void addManager(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/add-manager");
+        target = target.queryParam("managerName", "Picadasso");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void addClient() {
+    private static void addClient(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/client/add-client");
+        target = target.queryParam("managerId", "Picadasso");
+        target = target.queryParam("clientName", "Ovuvuevuevue Enyetuenwuevue Ugbemugbem Osas");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
+
     }
 
-    private static void addCurrency() {
+    private static void addCurrency(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/currency/add-currency");
+        target = target.queryParam("currencyName", "Dollar");
+        target = target.queryParam("exchangeToEuro", 0.88);
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
     private static void listManagers() {

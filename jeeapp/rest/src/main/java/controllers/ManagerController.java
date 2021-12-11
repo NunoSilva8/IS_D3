@@ -33,7 +33,7 @@ public class ManagerController {
             1. Add manager
             2. Return success
          */
-        return null;
+        return new Retorno(true, "AddManager");
     }
 
     @GET

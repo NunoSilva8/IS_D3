@@ -1,5 +1,6 @@
 package controllers;
 import entities.Client;
+import entities.Retorno;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,14 +22,14 @@ public class ClientController {
     @POST
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addClient(Integer managerId, String clientName){
+    public Retorno addClient(Integer managerId, String clientName){
         /*
             1. If manager não existe... return erro
             2. Else...
             2.1. Add client
             2.2. Return success
          */
-        return null;
+         return new Retorno(true, "AddClient");
     }
 
     @GET

@@ -24,4 +24,12 @@ public class Retorno {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "Retorno{" +
+                "isSuccess=" + isSuccess +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
