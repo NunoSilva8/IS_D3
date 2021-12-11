@@ -1,0 +1,6 @@
+entities\Retorno.class
+entities\Currency.class
+entities\Client.class
+kafka\ConsumerProducer.class
+kafka\SimpleConsumer.class
+kafka\SimpleProducer.class

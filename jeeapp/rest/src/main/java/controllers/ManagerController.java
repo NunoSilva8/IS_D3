@@ -3,10 +3,7 @@ package controllers;
 import entities.Manager;
 import entities.Retorno;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -28,6 +25,7 @@ public class ManagerController {
      */
     @POST
     @Path("/add-manager")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Retorno addManager(String managerName){
          /*
             0? Verificar se managerName existe?

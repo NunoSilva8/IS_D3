@@ -1,10 +1,7 @@
 package controllers;
 import entities.Client;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -23,6 +20,7 @@ public class ClientController {
      */
     @POST
     @Path("/add-client")
+    @Consumes(MediaType.APPLICATION_JSON)
     public String addClient(Integer managerId, String clientName){
         /*
             1. If manager não existe... return erro
@@ -35,7 +33,6 @@ public class ClientController {
 
     @GET
     @Path("/get-clients")
-    @Produces(MediaType.APPLICATION_JSON)
     public List<Client> getClients(){
         return null;
     }
