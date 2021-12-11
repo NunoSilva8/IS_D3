@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS `client` (
   `manager_id` bigint(20) NOT NULL,
   `payment_total` double NOT NULL,
   `credit_total` double NOT NULL,
+  `payments_last_two_months` tinyint(4) NOT NULL,
+  `balance_last_month` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `client_fk1` (`manager_id`),
   CONSTRAINT `client_fk1` FOREIGN KEY (`manager_id`) REFERENCES `manager` (`id`)
