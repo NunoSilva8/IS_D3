@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
   <modelVersion>4.0.0</modelVersion>
     
   <groupId>book</groupId>
@@ -135,8 +135,8 @@
                         
             <defaultLibBundleDir>lib</defaultLibBundleDir>
                         
-            <outputDirectory>C:\Users\Nuno\Desktop\IS\Assignment 3\wildfly-26.0.0.Beta1\standalone\deployments</outputDirectory>
-                      
+            <!-- <outputDirectory>C:\Users\Nuno\Desktop\IS\Assignment 3\wildfly-26.0.0.Beta1\standalone\deployments</outputDirectory> -->
+            <outputDirectory>C:\Users\Henri\OneDrive\Ambiente de Trabalho\Mestrado\IS\wildfly-25.0.0.Final\standalone\deployments</outputDirectory>
           </configuration>
                   
         </plugin>
