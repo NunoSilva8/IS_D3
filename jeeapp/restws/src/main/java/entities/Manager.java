@@ -4,6 +4,8 @@ import java.util.List;
 
 public class Manager{
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
     private String name;
     private Long revenue;

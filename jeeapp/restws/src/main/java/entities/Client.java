@@ -2,6 +2,8 @@ package entities;
 
 public class Client{
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
     private String name;
     private Long balance;

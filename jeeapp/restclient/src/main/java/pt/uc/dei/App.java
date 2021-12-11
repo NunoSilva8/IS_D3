@@ -70,43 +70,43 @@ public class App {
                 addCurrency(client);
                 break;
             case 4:
-                listManagers();
+                listManagers(client);
                 break;
             case 5:
-                listClients();
+                listClients(client);
                 break;
             case 6:
-                listCurrencies();
+                listCurrencies(client);
                 break;
             case 7:
-                listCreditsPerClient();
+                listCreditsPerClient(client);
                 break;
             case 8:
-                listPaymentsPerClient();
+                listPaymentsPerClient(client);
                 break;
             case 9:
-                getClientBalance();
+                getClientBalance(client);
                 break;
             case 10:
-                getTotalCredits();
+                getTotalCredits(client);
                 break;
             case 11:
-                getTotalPayments();
+                getTotalPayments(client);
                 break;
             case 12:
-                getTotalBalance();
+                getTotalBalance(client);
                 break;
             case 13:
-                getClientLastMothBill();
+                getClientLastMothBill(client);
                 break;
             case 14:
-                listClientsWithoutPurchasesInTheLastTwoMonths();
+                listClientsWithoutPurchasesInTheLastTwoMonths(client);
                 break;
             case 15:
-                getClientWithBiggestDebt();
+                getClientWithBiggestDebt(client);
                 break;
             case 16:
-                getManagerWithBiggestRevenue();
+                getManagerWithBiggestRevenue(client);
                 break;
             case 17:
                 keepOnGoing = false;
@@ -121,7 +121,7 @@ public class App {
         WebTarget target = client.target("http://localhost:8080/restws/rest/manager/add-manager");
         target = target.queryParam("managerName", "Picadasso");
         Response response = target.request().get();
-        String retorno = response.readEntity(String.class);
+        Retorno retorno = response.readEntity(Retorno.class);
         System.out.println(retorno.toString());
     }
 
@@ -130,7 +130,7 @@ public class App {
         target = target.queryParam("managerId", "Picadasso");
         target = target.queryParam("clientName", "Ovuvuevuevue Enyetuenwuevue Ugbemugbem Osas");
         Response response = target.request().get();
-        String retorno = response.readEntity(String.class);
+        Retorno retorno = response.readEntity(Retorno.class);
         System.out.println(retorno.toString());
 
     }
@@ -140,46 +140,98 @@ public class App {
         target = target.queryParam("currencyName", "Dollar");
         target = target.queryParam("exchangeToEuro", 0.88);
         Response response = target.request().get();
-        String retorno = response.readEntity(String.class);
+        Retorno retorno = response.readEntity(Retorno.class);
         System.out.println(retorno.toString());
     }
 
-    private static void listManagers() {
+    private static void listManagers(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-managers");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void listClients() {
+    private static void listClients(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-clients");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void listCurrencies() {
+    private static void listCurrencies(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-currencies");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void listCreditsPerClient() {
+    private static void listCreditsPerClient(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-client-credit");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void listPaymentsPerClient() {
+    private static void listPaymentsPerClient(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-client-payments");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getClientBalance() {
+    private static void getClientBalance(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-client-balance");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getTotalCredits() {
+    private static void getTotalCredits(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-clients-credit");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getTotalPayments() {
+    private static void getTotalPayments(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-clients-payments");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getTotalBalance() {
+    private static void getTotalBalance(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-clients-balance");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getClientLastMothBill() {
+    private static void getClientLastMothBill(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-client-bill-last-month");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void listClientsWithoutPurchasesInTheLastTwoMonths() {
+    private static void listClientsWithoutPurchasesInTheLastTwoMonths(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-clients-no-payments-last-two-months");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getClientWithBiggestDebt() {
+    private static void getClientWithBiggestDebt(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-client-in-most-debt");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 
-    private static void getManagerWithBiggestRevenue() {
+    private static void getManagerWithBiggestRevenue(Client client) {
+        WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-manager-most-revenue");
+        Response response = target.request().get();
+        Retorno retorno = response.readEntity(Retorno.class);
+        System.out.println(retorno.toString());
     }
 }

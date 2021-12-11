@@ -2,6 +2,8 @@ package entities;
 
 public class Currency{
 
+    private static final long serialVersionUID = 1L;
+
     private String name;
     private Long toEuro;
 

@@ -1,8 +1,10 @@
 package book;
 import entities.Client;
+import entities.Retorno;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/client")
@@ -21,20 +23,20 @@ public class ClientController {
     @POST
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addClient(Integer managerId, String clientName){
+    public Retorno addClient(Integer managerId, String clientName){
         /*
             1. If manager não existe... return erro
             2. Else...
             2.1. Add client
             2.2. Return success
          */
-         return "Correu a função AddClient";
+        return new Retorno(true, "Cliente criado com sucesso");
     }
 
     @GET
     @Path("/get-clients")
-    public List<Client> getClients(){
-        return null;
+    public Retorno getClients(){
+        return new Retorno(true, "Lista de Clientes", new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -43,56 +45,68 @@ public class ClientController {
      */
     @GET
     @Path("/get-client-credit")
-    public Long getClientCredit(){
-        return null;
+    public Retorno getClientCredit(){
+        String clientName = "HARDCODE";
+        Long clientCredit = 123L;
+        return new Retorno(true, "O crédito do cliente " + clientName + "é de " + clientCredit);
     }
 
     @GET
     @Path("/get-client-payments")
-    public Long getClientPayments(){
-        return null;
+    public Retorno getClientPayments(){
+        String clientName = "HARDCODE";
+        Long clientPayment = 123L;
+        return new Retorno(true, "O pagamento do cliente " + clientName + "é de " + clientPayment);
     }
 
     @GET
     @Path("/get-client-balance")
-    public Long getClientBalance(){
-        return null;
+    public Retorno getClientBalance(){
+        String clientName = "HARDCODE";
+        Long clientBalance = 123L;
+        return new Retorno(true, "O balance do cliente " + clientName + "é de " + clientBalance);
     }
 
     @GET
     @Path("/get-clients-credit")
-    public Long getClientsCredit(){
-        return null;
+    public Retorno getClientsCredit(){
+        Long clientsCredit = 123L;
+        return new Retorno(true, "A soma dos créditos dos clientes é de " + clientsCredit);
     }
 
     @GET
     @Path("/get-clients-payments")
-    public Long getClientsPayments(){
-        return null;
+    public Retorno getClientsPayments(){
+        Long clientsPayments = 123L;
+        return new Retorno(true, "A soma dos pagamentos dos clientes é de " + clientsPayments);
     }
 
     @GET
     @Path("/get-clients-balance")
-    public Long getClientsBalance(){
-        return null;
+    public Retorno getClientsBalance(){
+        Long clientsBalance = 123L;
+        return new Retorno(true, "A soma dos balances dos clientes é de " + clientsBalance);
     }
 
     @GET
     @Path("/get-client-bill-last-month")
-    public Long getClientBillLastMonth(){
-        return null;
+    public Retorno getClientBillLastMonth(){
+        String clientName = "HARDCODE";
+        Long clientBill = 123L;
+        return new Retorno(true, "A conta do clientes é de " + clientName + " durante o último mês é de " + clientBill);
     }
 
     @GET
     @Path("/get-clients-no-payments-last-two-months")
-    public List<String> getClientsNoPaymentsLastTwoMonths(){
-        return null;
+    public Retorno getClientsNoPaymentsLastTwoMonths(){
+        return new Retorno(true, "Lista de Clientes sem pagamentos nos últimos 2 meses", new ArrayList<>(), new ArrayList<>());
     }
 
     @GET
-    @Path("/get-client-most-debt")
-    public List<String> getClientMostDebt(){
-        return null;
+    @Path("/get-client-in-most-debt")
+    public Retorno getClientMostDebt(){
+        String clientName = "HARDCODE";
+        return new Retorno(true, "O cliente com maior dívida é o cliente " + clientName);
     }
 
 }

@@ -1,2 +1,8 @@
+book\ClientController.class
+entities\Retorno.class
+entities\Currency.class
+book\CurrencyController.class
+entities\Client.class
+book\ManagerController.class
+entities\Manager.class
 book\ApplicationConfig.class
-book\MyService.class
