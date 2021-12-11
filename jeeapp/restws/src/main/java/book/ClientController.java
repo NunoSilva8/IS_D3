@@ -23,14 +23,14 @@ public class ClientController {
     @POST
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Retorno addClient(Integer managerId, String clientName){
+    public String addClient(Integer managerId, String clientName){
         /*
             1. If manager não existe... return erro
             2. Else...
             2.1. Add client
             2.2. Return success
          */
-        return new Retorno(true, "Cliente criado com sucesso");
+        return "Cliente criado com sucesso";
     }
 
     @GET

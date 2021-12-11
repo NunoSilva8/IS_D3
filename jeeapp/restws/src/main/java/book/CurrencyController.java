@@ -30,14 +30,14 @@ public class CurrencyController {
      */
     @POST
     @Path("/add-currency")
-    public Retorno addCurrency(String currencyName, Long exchangeToEuro){
+    public String addCurrency(String currencyName, Long exchangeToEuro){
          /*
             1. If currencyName existe => return erro
             2. Else...
             2.1. Add currency
             2.2. Return success
          */
-        return new Retorno(true, "Currency criada com sucesso");
+        return "Currency criada com sucesso";
     }
 
     @GET

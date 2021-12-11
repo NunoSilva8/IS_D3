@@ -27,20 +27,23 @@ public class ManagerController {
     @POST
     @Path("/add-manager")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Retorno addManager(String managerName){
+    public String addManager(String managerName){
          /*
             0? Verificar se managerName existe?
 
             1. Add manager
             2. Return success
          */
-        return new Retorno(true, "Manager criado com sucesso");
+        return "Manager criado com sucesso";
     }
 
     @GET
     @Path("/get-managers")
-    public Retorno getManagers(){
-        return new Retorno(true, "Lista de managers.", new ArrayList<>(), new ArrayList<>());
+    public List<Manager> getManagers(){
+        List<Manager> managers = new ArrayList<>();
+        managers.add(new Manager(1, "Steve"));
+        managers.add(new Manager(2, "Jobs"));
+        return managers;
     }
 
     @GET
