@@ -1,11 +1,14 @@
 package book;
 
+import entities.Manager;
 import entities.Retorno;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -118,12 +121,11 @@ public class App {
     }
 
     private static void addManager(Client client) {
-        Retorno retorno = new Retorno();
         WebTarget target = client.target("http://localhost:8080/restws/rest/manager/add-manager");
         target = target.queryParam("managerName", "Picadasso");
         Response response = target.request().get();
-        retorno = response.readEntity(Retorno.class);
-        System.out.println(retorno.toString());
+        String retorno = response.readEntity(String.class);
+        System.out.println(retorno);
         response.close();
     }
 
@@ -132,8 +134,8 @@ public class App {
         target = target.queryParam("managerId", "Picadasso");
         target = target.queryParam("clientName", "Ovuvuevuevue Enyetuenwuevue Ugbemugbem Osas");
         Response response = target.request().get();
-        Retorno retorno = response.readEntity(Retorno.class);
-        System.out.println(retorno.toString());
+        String retorno = response.readEntity(String.class);
+        System.out.println(retorno);
         response.close();
     }
 
@@ -142,16 +144,18 @@ public class App {
         target = target.queryParam("currencyName", "Dollar");
         target = target.queryParam("exchangeToEuro", 0.88);
         Response response = target.request().get();
-        Retorno retorno = response.readEntity(Retorno.class);
-        System.out.println(retorno.toString());
+        String retorno = response.readEntity(String.class);
+        System.out.println(retorno);
         response.close();
     }
 
     private static void listManagers(Client client) {
         WebTarget target = client.target("http://localhost:8080/restws/rest/manager/get-managers");
         Response response = target.request().get();
-        Retorno retorno = response.readEntity(Retorno.class);
-        System.out.println(retorno.toString());
+        List<Manager> retorno = response.readEntity(new GenericType<List<Manager>>(){});
+        for (Manager m : retorno) {
+            System.out.println("ManagerId: " + m.getId() + " ManagerName: " + m.getName());
+        };
         response.close();
     }
 

@@ -5,6 +5,7 @@ import entities.Retorno;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +40,11 @@ public class ManagerController {
 
     @GET
     @Path("/get-managers")
-    public List<Manager> getManagers(){
+    public Response getManagers(){
         List<Manager> managers = new ArrayList<>();
         managers.add(new Manager(1, "Steve"));
         managers.add(new Manager(2, "Jobs"));
-        return managers;
+        return Response.ok().entity(managers).build();
     }
 
     @GET
