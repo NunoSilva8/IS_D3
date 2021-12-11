@@ -13,8 +13,7 @@ public class Retorno {
     public List<Manager> managers;
     public List<Currency> currencies;
 
-    public Retorno() {
-
+    public Retorno(){
     }
 
     public Retorno(Boolean isSuccess, String message) {
