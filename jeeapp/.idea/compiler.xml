@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="rest" />
         <module name="client" />
         <module name="KafkaStreams" />
+        <module name="restws" />
         <module name="restclient" />
         <module name="ear" />
       </profile>
@@ -21,6 +21,7 @@
       <module name="logging" target="1.5" />
       <module name="primary-source" target="1.5" />
       <module name="projects" target="1.5" />
+      <module name="rest" target="16" />
       <module name="restClient" target="1.7" />
       <module name="servlet" target="1.5" />
       <module name="servlets" target="1.5" />

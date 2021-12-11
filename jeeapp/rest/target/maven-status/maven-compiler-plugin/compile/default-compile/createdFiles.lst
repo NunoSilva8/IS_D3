@@ -1,8 +1,0 @@
-entities\Retorno.class
-entities\Currency.class
-entities\Client.class
-controllers\CurrencyController.class
-controllers\ClientController.class
-controllers\ManagerController.class
-entities\Manager.class
-RestServer.class

@@ -15,7 +15,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <dependencies>
     <dependency>
       <groupId>book</groupId>
-      <artifactId>rest</artifactId>
+      <artifactId>restws</artifactId>
       <version>1</version>
       <type>war</type>
     </dependency>
