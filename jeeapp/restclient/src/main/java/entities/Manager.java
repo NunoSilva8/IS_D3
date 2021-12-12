@@ -8,18 +8,18 @@ public class Manager{
 
     private Integer id;
     private String name;
-    private Long revenue;
+    private Double revenue;
     private List<Client> clients;
 
     public Manager(String name) {
         this.name = name;
-        this.revenue = 0L;
+        this.revenue = 0.0;
     }
 
     public Manager(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.revenue = 0L;
+        this.revenue = 0.0;
     }
 
     public Integer getId() {
@@ -38,11 +38,11 @@ public class Manager{
         this.name = name;
     }
 
-    public Long getRevenue() {
+    public Double getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(Long revenue) {
+    public void setRevenue(Double revenue) {
         this.revenue = revenue;
     }
 

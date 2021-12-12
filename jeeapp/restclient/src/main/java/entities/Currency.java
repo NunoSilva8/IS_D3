@@ -5,9 +5,9 @@ public class Currency{
     private static final long serialVersionUID = 1L;
 
     private String name;
-    private Long toEuro;
+    private Double toEuro;
 
-    public Currency(String name, Long toEuro) {
+    public Currency(String name, Double toEuro) {
         this.name = name;
         this.toEuro = toEuro;
     }
@@ -20,11 +20,11 @@ public class Currency{
         this.name = name;
     }
 
-    public Long getToEuro() {
+    public Double getToEuro() {
         return toEuro;
     }
 
-    public void setToEuro(Long toEuro) {
+    public void setToEuro(Double toEuro) {
         this.toEuro = toEuro;
     }
 

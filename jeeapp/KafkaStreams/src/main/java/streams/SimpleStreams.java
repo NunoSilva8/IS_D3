@@ -113,7 +113,6 @@ public class SimpleStreams {
                     return obj.toString();
                 });
         KTable<String, String> windowedMovementsTable = windowedMovements.toStream((k,v) -> k.key()).toTable();
-        windowedMovementsTable.toStream().peek((k,v) -> System.out.println("1: "+k+"|"+v));
 
         //Calcular Windowed Payments
         KTable<Windowed<String>, String> windowedPayments = credito_pagamento
@@ -150,7 +149,6 @@ public class SimpleStreams {
                     return obj.toString();
                 });
         KTable<String, String> windowedPaymentsTable = windowedPayments.toStream((k,v) -> k.key()).toTable();
-        windowedPaymentsTable.toStream().peek((k,v) -> System.out.println("2: "+k+"|"+v));
 
         //Calcular Total Balance, Credits, Payments
         KTable<String, String> Movements = credito_pagamento
@@ -182,7 +180,6 @@ public class SimpleStreams {
                     obj.remove("currency");
                     return obj.toString();
                 });
-        Movements.toStream().peek((k,v) -> System.out.println("3: "+k+"|"+v));
 
         //Update Manager Revenue
         KTable<String, String> managerRevenue = paymentsInStream
@@ -219,7 +216,7 @@ public class SimpleStreams {
                     }
                     return end.toString();});
 
-        //JOIN TABLES
+        //JOIN TABLES - Esta a duplicar entradas em vez de dar merge. Porem a ultima e sempre a mais atualizada.
         KTable<String, String> Client = Movements.leftJoin(windowedMovementsTable, (left, right) -> {
             JSONObject l = new JSONObject(left);
             try {
@@ -246,7 +243,7 @@ public class SimpleStreams {
         });
 
         //SEND STREAMS
-        Client.toStream().to("resultstopic");
+        Client.toStream().peek((k,v) -> System.out.println("FINAL: "+k+"|"+v));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.cleanUp();
