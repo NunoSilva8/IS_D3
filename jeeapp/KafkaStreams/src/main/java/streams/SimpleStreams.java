@@ -14,13 +14,11 @@ import org.apache.kafka.streams.kstream.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.*;
-
-import static org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded;
 
 
 public class SimpleStreams {
     public static void main(String[] args) throws InterruptedException, IOException {
+        //STREAMS PROPS
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "exercises-application");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
@@ -28,13 +26,34 @@ public class SimpleStreams {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         StreamsBuilder builder = new StreamsBuilder();
 
-        //CURRENCIES
-        JSONObject currencies = new JSONObject();
-        currencies.put("EUR", 1.0);
-        
         //STREAMS
         KStream<String, String> creditsInStream = builder.stream("credits");
         KStream<String, String> paymentsInStream = builder.stream("payments");
+
+        //CURRENCIES
+        JSONObject currencies = new JSONObject();
+
+        //CURRENCY PROPS
+        Properties propsConsumer = new Properties();
+        propsConsumer.put("bootstrap.servers", "localhost:9092");
+        propsConsumer.put("acks", "all");
+        propsConsumer.put("retries", 0);
+        propsConsumer.put("batch.size", 16384);
+        propsConsumer.put("linger.ms", 1);
+        propsConsumer.put("buffer.memory", 33554432);
+        propsConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsCurrencyConsumer");
+        propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        Consumer<String, String> consumer = new KafkaConsumer<>(propsConsumer);
+        consumer.subscribe(Collections.singletonList("db-info-currency"));
+        ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+        for (ConsumerRecord<String, String> record : records) {
+            JSONObject coin = new JSONObject(record.value());
+            coin = coin.getJSONObject("payload");
+            currencies.put(coin.getString("name"), coin.getDouble("to_euro"));
+        }
+        consumer.close();
 
         ValueJoiner<String, String, String> valueJoiner = (credito, pagamento) -> {
             JSONObject obj = null;
@@ -223,22 +242,10 @@ public class SimpleStreams {
         streams.cleanUp();
         streams.start();
 
-        //UPDATE CURRENCIES
-        Properties propsConsumer = new Properties();
-        propsConsumer.put("bootstrap.servers", "localhost:9092");
-        propsConsumer.put("acks", "all");
-        propsConsumer.put("retries", 0);
-        propsConsumer.put("batch.size", 16384);
-        propsConsumer.put("linger.ms", 1);
-        propsConsumer.put("buffer.memory", 33554432);
-        propsConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsCurrencyConsumer");
-        propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        propsConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        Consumer<String, String> consumer = new KafkaConsumer<>(propsConsumer);
+        consumer = new KafkaConsumer<>(propsConsumer);
         consumer.subscribe(Collections.singletonList("db-info-currency"));
-
         do {
-            ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+            records = consumer.poll(1000L);
             for (ConsumerRecord<String, String> record : records) {
                 JSONObject coin = new JSONObject(record.value());
                 coin = coin.getJSONObject("payload");
