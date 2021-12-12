@@ -10,7 +10,7 @@ public class SimpleConsumer {
     public static void main(String[] args) throws Exception {
         //Assign topicName to string variable
         //String topicName = args[0].toString();
-        String topicName = "results";
+        String topicName = "db-info-client";
 
         // create instance for properties to access producer configs
         Properties props = new Properties();

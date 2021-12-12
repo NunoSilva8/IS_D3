@@ -1,8 +1,10 @@
-book\ClientController.class
+book\ApplicationController.class
 entities\Retorno.class
 entities\Currency.class
-book\CurrencyController.class
+database\DataBaseQueries.class
 entities\Client.class
-book\ManagerController.class
+database\DatabaseTablesInfo.class
+database\DataBaseUtils.class
+database\InsertQueries.class
 entities\Manager.class
 book\ApplicationConfig.class
