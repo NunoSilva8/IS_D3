@@ -131,7 +131,6 @@ public class App {
         managerName = scanf.nextLine();
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-manager");
-        target = target.queryParam("managerName", "Picadasso");
         Response response = target.request().post(Entity.entity(managerName, MediaType.APPLICATION_JSON));
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
@@ -151,13 +150,7 @@ public class App {
         managerId = scanf.nextInt();
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-client");
-        target = target.queryParam("managerId", managerId);
-        target = target.queryParam("clientName", clientName);
-
-        Response response = target.request().post(
-                Entity.entity(new entities.Client(clientName, new Manager(managerId, "")),
-                MediaType.APPLICATION_JSON)
-        );
+        Response response = target.request().post(Entity.entity( clientName + " " + managerId, MediaType.APPLICATION_JSON));
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
         response.close();
@@ -176,7 +169,7 @@ public class App {
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-currency");
         Response response = target.request().post(Entity.entity(
-                new Currency(currencyName, toEuro),
+                currencyName + " " + toEuro,
                 MediaType.APPLICATION_JSON)
         );
         String retorno = response.readEntity(String.class);

@@ -28,18 +28,20 @@ public class ApplicationController {
 
     /**
      *
-     * @param client
+     * @param inputs
      * @return
      */
     @POST
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addClient(Client client){
+    public String addClient(String inputs){
+        String[] splitStr = inputs.split("\\s+");
+
         try{
             PreparedStatement ps = dbConnection.prepareStatement(INSERT_CLIENT);
-            ps.setString(1, client.getName());
+            ps.setString(1, splitStr[0]);
             ps.setDouble(2, 0.0);
-            ps.setString(3, client.getManager().getId().toString());
+            ps.setString(3, splitStr[1]);
             ps.setDouble(4, 0.0);
             ps.setDouble(5, 0.0);
             ps.setDouble(6, 0.0);
@@ -373,18 +375,20 @@ public class ApplicationController {
 
     /**
      *
-     * @param currency
+     * @param inputs
      * @return
      */
     @POST
     @Path("/add-currency")
-
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addCurrency(Currency currency){
+    public String addCurrency(String inputs){
+        String[] splitStr = inputs.split("\\s+");
+        Double toEuro = Double.parseDouble(splitStr[1]);
+        
         try{
             PreparedStatement ps = dbConnection.prepareStatement(INSERT_CURRENCY);
-            ps.setString(1, currency.getName());
-            ps.setDouble(2, currency.getToEuro());
+            ps.setString(1, splitStr[0]);
+            ps.setDouble(2, toEuro);
 
             ps.executeUpdate();
             ps.close();
