@@ -1,9 +1,11 @@
 package streams;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -29,37 +31,7 @@ public class SimpleStreams {
         //CURRENCIES
         JSONObject currencies = new JSONObject();
         currencies.put("EUR", 1.0);
-        currencies.put("USD", 0.89);
-
-        //CLIENTES
-        JSONObject clientes = new JSONObject();
-        clientes.put("1", new JSONObject("{\"id\":1,\"name\":\"Client Name 1\",\"balance\":0.0,\"manager_id\":2,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("2", new JSONObject("{\"id\":2,\"name\":\"Client Name 2\",\"balance\":0.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("90", new JSONObject("{\"id\":90,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("91", new JSONObject("{\"id\":91,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("92", new JSONObject("{\"id\":92,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("93", new JSONObject("{\"id\":93,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("94", new JSONObject("{\"id\":94,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("95", new JSONObject("{\"id\":95,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("96", new JSONObject("{\"id\":96,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("97", new JSONObject("{\"id\":97,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("98", new JSONObject("{\"id\":98,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("99", new JSONObject("{\"id\":99,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("100", new JSONObject("{\"id\":100,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("101", new JSONObject("{\"id\":101,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("102", new JSONObject("{\"id\":102,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("103", new JSONObject("{\"id\":103,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("104", new JSONObject("{\"id\":104,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("105", new JSONObject("{\"id\":105,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("106", new JSONObject("{\"id\":106,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("107", new JSONObject("{\"id\":107,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("108", new JSONObject("{\"id\":108,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("109", new JSONObject("{\"id\":109,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-        clientes.put("110", new JSONObject("{\"id\":110,\"name\":\"Client Name 3\",\"balance\":10.0,\"manager_id\":1,\"payment_total\":0,\"credit_total\":0}"));
-
-
-
-
+        
         //STREAMS
         KStream<String, String> creditsInStream = builder.stream("credits");
         KStream<String, String> paymentsInStream = builder.stream("payments");
@@ -186,7 +158,8 @@ public class SimpleStreams {
                 .selectKey((key, value) -> {
                     JSONObject obj = new JSONObject(value);
                     return String.valueOf(obj.getInt("manager_id"));})
-                .groupByKey().reduce((oldvalue, newvalue) -> {
+                .groupByKey()
+                .reduce((oldvalue, newvalue) -> {
                     JSONObject obj = new JSONObject(newvalue);
                     JSONObject oldobj = new JSONObject(oldvalue);
                     JSONObject end = new JSONObject();
@@ -244,11 +217,36 @@ public class SimpleStreams {
 
         //SEND STREAMS
         Client.toStream().peek((k,v) -> System.out.println("FINAL: "+k+"|"+v));
+        managerRevenue.toStream().peek((k,v) -> System.out.println("FINAL: "+k+"|"+v));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.cleanUp();
         streams.start();
+
+        //UPDATE CURRENCIES
+        Properties propsConsumer = new Properties();
+        propsConsumer.put("bootstrap.servers", "localhost:9092");
+        propsConsumer.put("acks", "all");
+        propsConsumer.put("retries", 0);
+        propsConsumer.put("batch.size", 16384);
+        propsConsumer.put("linger.ms", 1);
+        propsConsumer.put("buffer.memory", 33554432);
+        propsConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsCurrencyConsumer");
+        propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        Consumer<String, String> consumer = new KafkaConsumer<>(propsConsumer);
+        consumer.subscribe(Collections.singletonList("db-info-currency"));
+
+        do {
+            ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+            for (ConsumerRecord<String, String> record : records) {
+                JSONObject coin = new JSONObject(record.value());
+                coin = coin.getJSONObject("payload");
+                currencies.put(coin.getString("name"), coin.getDouble("to_euro"));
+            }
+        }while (true);
     }
+    
 
     public static String CLIENT_SCHEMA(JSONObject Payload) {
         JSONObject JSON = new JSONObject("{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"int64\",\"optional\":false,\"field\":\"id\"},{\"type\":\"string\",\"optional\":false,\"field\":\"name\"},{\"type\":\"double\",\"optional\":false,\"field\":\"balance\"},{\"type\":\"int64\",\"optional\":false,\"field\":\"manager_id\"},{\"type\":\"double\",\"optional\":false,\"field\":\"payment_total\"},{\"type\":\"double\",\"optional\":false,\"field\":\"credit_total\"},{\"type\":\"int8\",\"optional\":false,\"field\":\"payments_last_two_months\"},{\"type\":\"double\",\"optional\":false,\"field\":\"balance_last_month\"}],\"optional\":false}}");

@@ -1,55 +1,92 @@
 package kafka;
 
 import entities.Currency;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.json.JSONObject;
 
 import java.util.*;
 
 public class SimpleProducer {
     public static void main(String[] args) throws Exception {
-
-        //Assign topicName to string variable
-        //String topicName = args[0].toString();
-        //TODO: verificar se basta mudar o nome do Topic como indica no link: https://stackoverflow.com/a/39093686
+        //PRODUCER PROPS
         String creditsTopic = "credits";
         String paymentsTopic = "payments";
-
-        // create instance for properties to access producer configs
         Properties props = new Properties();
-
-        //Assign localhost id
         props.put("bootstrap.servers", "localhost:9092");
-
-        //Set acknowledgements for producer requests.
         props.put("acks", "all");
-
-        //If the request fails, the producer can automatically retry,
         props.put("retries", 0);
-
-        //Specify buffer size in config
         props.put("batch.size", 16384);
-
-        //Reduce the no of requests less than 0
         props.put("linger.ms", 1);
-
-        //The buffer.memory controls the total amount of memory available to the producer for buffering.
         props.put("buffer.memory", 33554432);
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
         Producer<String, String> producer = new KafkaProducer<>(props);
-        Boolean keepOnGoing = true;
+        
+        //CURRENCY CONSUMER PROPS
+        Properties propsConsumerCurrency = new Properties();
+        propsConsumerCurrency.put("bootstrap.servers", "localhost:9092");
+        propsConsumerCurrency.put("acks", "all");
+        propsConsumerCurrency.put("retries", 0);
+        propsConsumerCurrency.put("batch.size", 16384);
+        propsConsumerCurrency.put("linger.ms", 1);
+        propsConsumerCurrency.put("buffer.memory", 33554432);
+        propsConsumerCurrency.put(ConsumerConfig.GROUP_ID_CONFIG, "ClientCurrencyConsumer");
+        propsConsumerCurrency.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsConsumerCurrency.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        Consumer<String, String> CurrencyConsumer = new KafkaConsumer<>(propsConsumerCurrency);
+        CurrencyConsumer.subscribe(Collections.singletonList("db-info-currency"));
+
+        //CLIENTS CONSUMER PROPS
+        Properties propsConsumerClient = new Properties();
+        propsConsumerClient.put("bootstrap.servers", "localhost:9092");
+        propsConsumerClient.put("acks", "all");
+        propsConsumerClient.put("retries", 0);
+        propsConsumerClient.put("batch.size", 16384);
+        propsConsumerClient.put("linger.ms", 1);
+        propsConsumerClient.put("buffer.memory", 33554432);
+        propsConsumerClient.put(ConsumerConfig.GROUP_ID_CONFIG, "ClientCurrencyConsumer");
+        propsConsumerClient.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsConsumerClient.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        Consumer<String, String> ClientConsumer = new KafkaConsumer<>(propsConsumerClient);
+        ClientConsumer.subscribe(Collections.singletonList("db-info-client"));
+
+        JSONObject currencies = new JSONObject();
+        JSONObject clients = new JSONObject();
+        do{
+            //SET CURRENCY LIST
+            ConsumerRecords<String, String> CurrencyRecords = CurrencyConsumer.poll(1000L);
+            System.out.println("CURRENCY: "+CurrencyRecords.count());
+            for (ConsumerRecord<String, String> record : CurrencyRecords) {
+                JSONObject coin = new JSONObject(record.value());
+                coin = coin.getJSONObject("payload");
+                currencies.put(coin.getString("name"), coin.getDouble("to_euro"));
+                System.out.println(coin);
+            }
+
+            //SET CLIENT LIST
+            ConsumerRecords<String, String> ClientRecords = ClientConsumer.poll(1000L);
+            System.out.println("CLIENTS: "+ClientRecords.count());
+            for (ConsumerRecord<String, String> record : ClientRecords) {
+                JSONObject client = new JSONObject(record.value());
+                client = client.getJSONObject("payload");
+                clients.put(String.valueOf(client.getInt("id")), client);
+                System.out.println(client);
+            }
+
+        } while (true);
+        /*
         Double amount;
         List<Currency> currencies = new ArrayList<>();
         Currency selectedCurrency;
         Random rand;
         List<String> typeOfOperation = new ArrayList<>(List.of("Credit", "Payment"));
-        String key = "229";
+        String key = "230";
 
-        producer.send(new ProducerRecord<String, String>(creditsTopic, key, creditToStream("EUR", 10.0, Integer.parseInt(key))));
-        /*
+        producer.send(new ProducerRecord<String, String>(creditsTopic, key, creditToStream("CNY", 10.0, Integer.parseInt(key))));
+
         do{
             amount = (long)(Math.random() * 10000L);
             rand = new Random();
@@ -67,8 +104,8 @@ public class SimpleProducer {
         }while(keepOnGoing);
 
 
-         */
-        producer.close();
+
+        producer.close();*/
     }
 
     public static String creditToStream(String currency, Double amount, Integer clientID) {
