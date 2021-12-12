@@ -6,13 +6,13 @@ import entities.Manager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static database.DataBaseUtils.*;
+import static database.InsertQueries.*;
+import static database.DataBaseQueries.*;
 
 @Path("/app")
 @Produces(MediaType.APPLICATION_JSON)
@@ -35,20 +35,46 @@ public class ApplicationController {
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
     public String addClient(Client client){
-        /*
-            1. If manager não existe... return erro
-            2. Else...
-            2.1. Add client
-            2.2. Return success
-         */
-        return "Cliente criado com sucesso";
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(INSERT_CLIENT);
+            ps.setString(1, client.getName());
+            ps.setString(2, "0");
+            ps.setString(3, client.getManager().getId().toString());
+            ps.setString(4, "0");
+            ps.setString(5, "0");
+            ps.setString(6, "0");
+            ps.setString(7, "0");
+
+            ps.executeUpdate();
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao criar cliente.";
+        }
+
+        return "Cliente criado com sucesso.";
     }
 
     @GET
     @Path("/get-clients")
     public String getClients(){
-        List<Client> clients = new ArrayList<>();
-        return "Lista de Clientes";
+        String clientsAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_ALL_CLIENTS);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientsAsString += "ClientId: " +
+                rSet.getInt(1) + ", ClientName: " +
+                rSet.getString(2) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar clientes.";
+        }
+
+        return clientsAsString;
     }
 
     /**
@@ -57,68 +83,216 @@ public class ApplicationController {
      */
     @GET
     @Path("/get-client-credit")
-    public String getClientCredit(){
-        String clientName = "HARDCODE";
-        Double clientCredit = 123.0;
-        return  "O crédito do cliente " + clientName + "é de " + clientCredit;
+    public String getClientCredit(@QueryParam("clientId") Integer clientId){
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENT_CREDITS_BY_ID);
+            ps.setInt(1, clientId);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + ", ClientCredit: " +
+                        rSet.getDouble(3) +"\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-client-payments")
-    public String getClientPayments(){
-        String clientName = "HARDCODE";
-        Double clientPayment = 123.0;
-        return "O pagamento do cliente " + clientName + "é de " + clientPayment;
+    public String getClientPayments(@QueryParam("clientId") Integer clientId){
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENT_PAYMENTS_BY_ID);
+            ps.setInt(1, clientId);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + ", ClientPayments: " +
+                        rSet.getDouble(3) +"\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-client-balance")
-    public String getClientBalance(){
-        String clientName = "HARDCODE";
-        Double clientBalance = 123.0;
-        return "O balance do cliente " + clientName + "é de " + clientBalance;
+    public String getClientBalance(@QueryParam("clientId") Integer clientId){
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENT_BALANCE_BY_ID);
+            ps.setInt(1, clientId);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + ", ClientBalance: " +
+                        rSet.getDouble(3) +"\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-clients-credit")
     public String getClientsCredit(){
-        Double clientsCredit = 123.0;
-        return "A soma dos créditos dos clientes é de " + clientsCredit;
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_SUM_CLIENT_CREDITS);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientsTotalCredits: " +
+                        rSet.getString(1) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao aceder à soma dos créditos dos clientes.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-clients-payments")
     public String getClientsPayments(){
-        Double clientsPayments = 123.0;
-        return "A soma dos pagamentos dos clientes é de " + clientsPayments;
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_SUM_CLIENT_PAYMENTS);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientsTotalPayments: " +
+                        rSet.getString(1) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao aceder à soma dos pagamentos dos clientes.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-clients-balance")
     public String getClientsBalance(){
-        Double clientsBalance = 123.0;
-        return "A soma dos balances dos clientes é de " + clientsBalance;
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_SUM_CLIENT_BALANCES);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientsTotalPayments: " +
+                        rSet.getString(1) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao aceder à soma dos balances dos clientes.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-client-bill-last-month")
-    public String getClientBillLastMonth(){
-        String clientName = "HARDCODE";
-        Double clientBill = 123.0;
-        return "A conta do clientes é de " + clientName + " durante o último mês é de " + clientBill;
+    public String getClientBillLastMonth(@QueryParam("clientId") Integer clientId){
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENT_LAST_MONTH_BILL);
+            ps.setInt(1, clientId);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + ", ClientBalanceLastMonth: " +
+                        rSet.getDouble(3) +"\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
+
 
     @GET
     @Path("/get-clients-no-payments-last-two-months")
     public String getClientsNoPaymentsLastTwoMonths(){
-        return "Lista de Clientes sem pagamentos nos últimos 2 meses";
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENTS_NO_PAYMENTS_LAST_TWO_MONTHS);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
 
     @GET
     @Path("/get-client-in-most-debt")
     public String getClientMostDebt(){
-        String clientName = "HARDCODE";
-        return "O cliente com maior dívida é o cliente " + clientName;
+        String clientAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_CLIENT_MIN_BALANCE);
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                clientAsString += "ClientId: " +
+                        rSet.getInt(1) + ", ClientName: " +
+                        rSet.getString(2) + ", ClientBalance: " +
+                        rSet.getDouble(3) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o cliente.";
+        }
+
+        return clientAsString;
     }
 
     /******MANAGER SECTION******/
@@ -132,29 +306,67 @@ public class ApplicationController {
     @Path("/add-manager")
     @Consumes(MediaType.APPLICATION_JSON)
     public String addManager(String managerName){
-         /*
-            0? Verificar se managerName existe?
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(INSERT_MANAGER);
+            ps.setString(1, managerName);
+            ps.setString(2, "0");
 
-            1. Add manager
-            2. Return success
-         */
+            ps.executeUpdate();
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao criar manager.";
+        }
+
         return "Manager criado com sucesso";
     }
 
     @GET
     @Path("/get-managers")
     public String getManagers(){
-        List<Manager> managers = new ArrayList<>();
+        String managersAsString = "";
 
-        return "getManagers";
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_ALL_MANAGERS);
+
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                managersAsString += "ManagerId: " +
+                        rSet.getInt(1) + ", ManagerName: " +
+                        rSet.getString(2) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar managers.";
+        }
+
+        return managersAsString;
     }
 
     @GET
     @Path("/get-manager-most-revenue")
-    public String getManagersMostRevenue(){
-        List<Manager> managers = new ArrayList<>();
+    public String getManagerMostRevenue(){
+        String managerAsString = "";
 
-        return "Manager com mais revenue.";
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_MANAGER_MOST_REVENUE);
+
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                managerAsString += "ManagerId: " +
+                        rSet.getInt(1) + ", ManagerName: " +
+                        rSet.getString(2) + ", ManagerRevenue: " +
+                        rSet.getDouble(3) +"\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar o manager com maiores ganhos.";
+        }
+
+        return managerAsString;
     }
 
     /******CURRENCY SECTION******/
@@ -169,19 +381,41 @@ public class ApplicationController {
 
     @Consumes(MediaType.APPLICATION_JSON)
     public String addCurrency(Currency currency){
-         /*
-            1. If currencyName existe => return erro
-            2. Else...
-            2.1. Add currency
-            2.2. Return success
-         */
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(INSERT_CURRENCY);
+            ps.setString(1, currency.getName());
+            ps.setString(2, currency.getToEuro().toString());
+
+            ps.executeUpdate();
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao criar moeda.";
+        }
+
         return "Currency criada com sucesso";
     }
 
     @GET
     @Path("/get-currencies")
     public String getCurrencies(){
-        List<Currency> currencies = new ArrayList<>();
-        return "Lista de currencies.";
+        String currenciesAsString = "";
+
+        try{
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_ALL_MANAGERS);
+
+            ResultSet rSet = ps.executeQuery();
+
+            while(rSet.next()){
+                currenciesAsString += "CurrencyName: " +
+                        rSet.getString(1) + ", ExchangeToEuro: " +
+                        rSet.getDouble(2) + "\n";
+            }
+
+            ps.close();
+        }catch(SQLException e){
+            return "[DATABASE ERROR] Erro ao procurar moedas.";
+        }
+
+        return currenciesAsString;
     }
 }

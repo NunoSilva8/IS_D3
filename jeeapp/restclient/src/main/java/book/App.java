@@ -86,13 +86,13 @@ public class App {
                 listCurrencies(client);
                 break;
             case 7:
-                listCreditsPerClient(client);
+                listCreditsPerClient(client, scanf);
                 break;
             case 8:
-                listPaymentsPerClient(client);
+                listPaymentsPerClient(client, scanf);
                 break;
             case 9:
-                getClientBalance(client);
+                getClientBalance(client, scanf);
                 break;
             case 10:
                 getTotalCredits(client);
@@ -104,7 +104,7 @@ public class App {
                 getTotalBalance(client);
                 break;
             case 13:
-                getClientLastMothBill(client);
+                getClientLastMothBill(client, scanf);
                 break;
             case 14:
                 listClientsWithoutPurchasesInTheLastTwoMonths(client);
@@ -147,7 +147,7 @@ public class App {
 
         System.out.println("\nSelecione um manager para o cliente: ");
         listManagers(client);
-        System.out.print("ManagerId: ");
+        System.out.print("\nManagerId: ");
         managerId = scanf.nextInt();
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-client");
@@ -208,24 +208,45 @@ public class App {
         response.close();
     }
 
-    private static void listCreditsPerClient(Client client) {
+    private static void listCreditsPerClient(Client client, Scanner scanf) {
+
+        Integer clientId;
+        scanf = new Scanner(System.in);
+        System.out.print("Insira o id do cliente: ");
+        clientId = scanf.nextInt();
+
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/get-client-credit");
+        target = target.queryParam("clientId", clientId);
         Response response = target.request().get();
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
         response.close();
     }
 
-    private static void listPaymentsPerClient(Client client) {
+    private static void listPaymentsPerClient(Client client, Scanner scanf) {
+
+        Integer clientId;
+        scanf = new Scanner(System.in);
+        System.out.print("Insira o id do cliente: ");
+        clientId = scanf.nextInt();
+
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/get-client-payments");
+        target = target.queryParam("clientId", clientId);
         Response response = target.request().get();
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
         response.close();
     }
 
-    private static void getClientBalance(Client client) {
+    private static void getClientBalance(Client client, Scanner scanf) {
+
+        Integer clientId;
+        scanf = new Scanner(System.in);
+        System.out.print("Insira o id do cliente: ");
+        clientId = scanf.nextInt();
+
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/get-client-balance");
+        target = target.queryParam("clientId", clientId);
         Response response = target.request().get();
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
@@ -256,8 +277,15 @@ public class App {
         response.close();
     }
 
-    private static void getClientLastMothBill(Client client) {
+    private static void getClientLastMothBill(Client client, Scanner scanf) {
+
+        Integer clientId;
+        scanf = new Scanner(System.in);
+        System.out.print("Insira o id do cliente: ");
+        clientId = scanf.nextInt();
+
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/get-client-bill-last-month");
+        target = target.queryParam("clientId", clientId);
         Response response = target.request().get();
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
