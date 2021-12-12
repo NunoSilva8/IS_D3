@@ -40,17 +40,18 @@ public class ManagerController {
 
     @GET
     @Path("/get-managers")
-    public Response getManagers(){
+    public String getManagers(){
         List<Manager> managers = new ArrayList<>();
-        managers.add(new Manager(1, "Steve"));
-        managers.add(new Manager(2, "Jobs"));
-        return Response.ok().entity(managers).build();
+
+        return "getManagers";
     }
 
     @GET
     @Path("/get-manager-most-revenue")
-    public Retorno getManagersMostRevenue(){
-        return new Retorno(true, "Manager com mais revenue.", new ArrayList<>(), new ArrayList<>());
+    public String getManagersMostRevenue(){
+        List<Manager> managers = new ArrayList<>();
+
+        return "Manager com mais revenue.";
     }
 }
 

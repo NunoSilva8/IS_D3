@@ -11,6 +11,11 @@ public class Manager{
     private Long revenue;
     private List<Client> clients;
 
+    public Manager(String name) {
+        this.name = name;
+        this.revenue = 0L;
+    }
+
     public Manager(Integer id, String name) {
         this.id = id;
         this.name = name;

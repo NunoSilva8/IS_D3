@@ -15,15 +15,14 @@ public class ClientController {
     }
 
     /**
-     * add manager method
-     * @param managerId
-     * @param clientName
+     *
+     * @param client
      * @return
      */
     @POST
     @Path("/add-client")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addClient(Integer managerId, String clientName){
+    public String addClient(Client client){
         /*
             1. If manager não existe... return erro
             2. Else...
@@ -35,8 +34,9 @@ public class ClientController {
 
     @GET
     @Path("/get-clients")
-    public Retorno getClients(){
-        return new Retorno(true, "Lista de Clientes", new ArrayList<>(), new ArrayList<>());
+    public String getClients(){
+        List<Client> clients = new ArrayList<>();
+        return "Lista de Clientes";
     }
 
     /**
@@ -45,68 +45,68 @@ public class ClientController {
      */
     @GET
     @Path("/get-client-credit")
-    public Retorno getClientCredit(){
+    public String getClientCredit(){
         String clientName = "HARDCODE";
         Long clientCredit = 123L;
-        return new Retorno(true, "O crédito do cliente " + clientName + "é de " + clientCredit);
+        return  "O crédito do cliente " + clientName + "é de " + clientCredit;
     }
 
     @GET
     @Path("/get-client-payments")
-    public Retorno getClientPayments(){
+    public String getClientPayments(){
         String clientName = "HARDCODE";
         Long clientPayment = 123L;
-        return new Retorno(true, "O pagamento do cliente " + clientName + "é de " + clientPayment);
+        return "O pagamento do cliente " + clientName + "é de " + clientPayment;
     }
 
     @GET
     @Path("/get-client-balance")
-    public Retorno getClientBalance(){
+    public String getClientBalance(){
         String clientName = "HARDCODE";
         Long clientBalance = 123L;
-        return new Retorno(true, "O balance do cliente " + clientName + "é de " + clientBalance);
+        return "O balance do cliente " + clientName + "é de " + clientBalance;
     }
 
     @GET
     @Path("/get-clients-credit")
-    public Retorno getClientsCredit(){
+    public String getClientsCredit(){
         Long clientsCredit = 123L;
-        return new Retorno(true, "A soma dos créditos dos clientes é de " + clientsCredit);
+        return "A soma dos créditos dos clientes é de " + clientsCredit;
     }
 
     @GET
     @Path("/get-clients-payments")
-    public Retorno getClientsPayments(){
+    public String getClientsPayments(){
         Long clientsPayments = 123L;
-        return new Retorno(true, "A soma dos pagamentos dos clientes é de " + clientsPayments);
+        return "A soma dos pagamentos dos clientes é de " + clientsPayments;
     }
 
     @GET
     @Path("/get-clients-balance")
-    public Retorno getClientsBalance(){
+    public String getClientsBalance(){
         Long clientsBalance = 123L;
-        return new Retorno(true, "A soma dos balances dos clientes é de " + clientsBalance);
+        return "A soma dos balances dos clientes é de " + clientsBalance;
     }
 
     @GET
     @Path("/get-client-bill-last-month")
-    public Retorno getClientBillLastMonth(){
+    public String getClientBillLastMonth(){
         String clientName = "HARDCODE";
         Long clientBill = 123L;
-        return new Retorno(true, "A conta do clientes é de " + clientName + " durante o último mês é de " + clientBill);
+        return "A conta do clientes é de " + clientName + " durante o último mês é de " + clientBill;
     }
 
     @GET
     @Path("/get-clients-no-payments-last-two-months")
-    public Retorno getClientsNoPaymentsLastTwoMonths(){
-        return new Retorno(true, "Lista de Clientes sem pagamentos nos últimos 2 meses", new ArrayList<>(), new ArrayList<>());
+    public String getClientsNoPaymentsLastTwoMonths(){
+        return "Lista de Clientes sem pagamentos nos últimos 2 meses";
     }
 
     @GET
     @Path("/get-client-in-most-debt")
-    public Retorno getClientMostDebt(){
+    public String getClientMostDebt(){
         String clientName = "HARDCODE";
-        return new Retorno(true, "O cliente com maior dívida é o cliente " + clientName);
+        return "O cliente com maior dívida é o cliente " + clientName;
     }
 
 }

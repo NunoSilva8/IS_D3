@@ -1,11 +1,9 @@
 package book;
 
+import entities.Currency;
 import entities.Retorno;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +21,15 @@ public class CurrencyController {
     }
 
     /**
-     * add currency method
-     * @param currencyName
-     * @param exchangeToEuro
+     *
+     * @param currency
      * @return
      */
     @POST
     @Path("/add-currency")
-    public String addCurrency(String currencyName, Long exchangeToEuro){
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addCurrency(Currency currency){
          /*
             1. If currencyName existe => return erro
             2. Else...
@@ -42,8 +41,9 @@ public class CurrencyController {
 
     @GET
     @Path("/get-currencies")
-    public Retorno getCurrencies(){
-        return new Retorno(true, "Lista de currencies.", new ArrayList<>());
+    public String getCurrencies(){
+        List<Currency> currencies = new ArrayList<>();
+        return "Lista de currencies.";
     }
 }
 
