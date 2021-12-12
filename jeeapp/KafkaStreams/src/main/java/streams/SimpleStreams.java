@@ -266,10 +266,12 @@ public class SimpleStreams {
         Client
                 .toStream()
                 .mapValues((v) -> CLIENT_SCHEMA(new JSONObject(v)))
+                .peek((k, v) -> System.out.println("BD atualizada: Client "+k))
                 .to("client");
         managerRevenue
                 .toStream()
                 .mapValues((v) -> MANAGER_SCHEMA(new JSONObject(v)))
+                .peek((k, v) -> System.out.println("BD atualizada: Manager "+k))
                 .to("manager");
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
