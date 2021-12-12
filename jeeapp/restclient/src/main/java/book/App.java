@@ -165,7 +165,7 @@ public class App {
         currencyName = scanf.nextLine();
 
         System.out.print("\nInsira o valor de troca para o Euro: ");
-        toEuro = scanf.nextDouble();
+        toEuro = Double.parseDouble(scanf.nextLine().replace(",", "."));
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-currency");
         Response response = target.request().post(Entity.entity(
