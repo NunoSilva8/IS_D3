@@ -46,9 +46,9 @@ public class SimpleProducer {
         Currency selectedCurrency;
         Random rand;
         List<String> typeOfOperation = new ArrayList<>(List.of("Credit", "Payment"));
-        String key = "120";
+        String key = "227";
 
-        producer.send(new ProducerRecord<String, String>(paymentsTopic, key, paymentToStream("EUR", 10.0, Integer.parseInt(key))));
+        producer.send(new ProducerRecord<String, String>(creditsTopic, key, creditToStream("EUR", 10.0, Integer.parseInt(key))));
         /*
         do{
             amount = (long)(Math.random() * 10000L);
@@ -71,8 +71,7 @@ public class SimpleProducer {
         producer.close();
     }
 
-    public static String creditToStream(String currency, Double amount, Integer clientID) { //TODO: verificar se pode ser static
-        //TODO:manager_id
+    public static String creditToStream(String currency, Double amount, Integer clientID) {
         return "{currency: " + currency +
                 ", amount: " + amount +
                 ", id: " + clientID +
@@ -82,7 +81,7 @@ public class SimpleProducer {
                 '}';
     }
 
-    public static String paymentToStream(String currency, Double amount,Integer clientID) { //TODO: verificar se pode ser static
+    public static String paymentToStream(String currency, Double amount,Integer clientID) {
         return "{currency: " + currency +
                 ", amount: " + amount +
                 ", id: " + clientID +

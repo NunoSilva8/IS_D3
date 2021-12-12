@@ -1,7 +1,6 @@
 package streams;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +9,12 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.swing.*;
+
+import static org.apache.kafka.streams.kstream.Suppressed.BufferConfig.unbounded;
 
 
 public class SimpleStreams {
@@ -60,7 +64,6 @@ public class SimpleStreams {
         KStream<String, String> creditsInStream = builder.stream("credits");
         KStream<String, String> paymentsInStream = builder.stream("payments");
 
-        //Calcular Total Balance, Credits, Payments
         ValueJoiner<String, String, String> valueJoiner = (credito, pagamento) -> {
             JSONObject obj = null;
             //Credito
@@ -83,7 +86,74 @@ public class SimpleStreams {
 
             return obj.toString();
         };
-        KTable<String, String> Movements = creditsInStream.outerJoin(paymentsInStream, valueJoiner, JoinWindows.of(Duration.ofSeconds(10))).groupByKey()
+        KGroupedStream<String, String> credito_pagamento = creditsInStream.outerJoin(paymentsInStream, valueJoiner, JoinWindows.of(TimeUnit.MILLISECONDS.toMillis(50))).groupByKey();
+
+        //Calcular Windowed Balance
+        KTable<Windowed<String>, String> windowedMovements = credito_pagamento
+                .windowedBy(TimeWindows.of(TimeUnit.DAYS.toMillis(30*1)))
+                .reduce((oldvalue, newvalue) -> {
+                    JSONObject JSON_old = new JSONObject(oldvalue);
+                    JSONObject JSON_new = new JSONObject(newvalue);
+
+                    Double amount = JSON_new.getDouble("amount");
+
+                    JSON_new.put("amount", JSON_old.getDouble("amount") + amount);
+                    return JSON_new.toString();
+                })
+                .mapValues((value) -> {
+                    JSONObject obj = new JSONObject(value);
+                    obj.put("balance_last_month", obj.getDouble("amount"));
+                    obj.remove("amount");
+                    obj.remove("manager_id");
+                    obj.remove("total_payments");
+                    obj.remove("total_credits");
+                    obj.remove("operation");
+                    obj.remove("currency");
+                    obj.remove("id");
+                    return obj.toString();
+                });
+        KTable<String, String> windowedMovementsTable = windowedMovements.toStream((k,v) -> k.key()).toTable();
+        windowedMovementsTable.toStream().peek((k,v) -> System.out.println("1: "+k+"|"+v));
+
+        //Calcular Windowed Payments
+        KTable<Windowed<String>, String> windowedPayments = credito_pagamento
+                .windowedBy(TimeWindows.of(TimeUnit.DAYS.toMillis(30*2)))
+                .reduce((oldval, newval) -> {
+                    JSONObject oldv = new JSONObject(oldval);
+                    JSONObject newv = new JSONObject(newval);
+
+                    if (!oldv.has("payments_last_two_months")){
+                        if (oldv.get("operation").equals("payment"))
+                            oldv.put("payments_last_two_months", 1);
+                        else
+                            oldv.put("payments_last_two_months", 0);
+                    }
+                    if (newv.getString("operation").equals("payment"))
+                        newv.put("payments_last_two_months", oldv.getInt("payments_last_two_months") + 1);
+                    return newv.toString();
+                })
+                .mapValues((key, value) -> {
+                    JSONObject obj = new JSONObject();
+                    JSONObject val = new JSONObject(value);
+
+                    if (!val.has("payments_last_two_months")){
+                        if (val.get("operation").equals("payment"))
+                            val.put("payments_last_two_months", 1);
+                        else
+                            val.put("payments_last_two_months", 0);
+                    }
+
+                    if (val.getInt("payments_last_two_months") > 0)
+                        obj.put("payments_last_two_months", 1);
+                    else
+                        obj.put("payments_last_two_month", 0);
+                    return obj.toString();
+                });
+        KTable<String, String> windowedPaymentsTable = windowedPayments.toStream((k,v) -> k.key()).toTable();
+        windowedPaymentsTable.toStream().peek((k,v) -> System.out.println("2: "+k+"|"+v));
+
+        //Calcular Total Balance, Credits, Payments
+        KTable<String, String> Movements = credito_pagamento
                 .reduce((oldvalue, newvalue) -> {
                     JSONObject JSON_old = new JSONObject(oldvalue);
                     JSONObject JSON_new = new JSONObject(newvalue);
@@ -112,7 +182,7 @@ public class SimpleStreams {
                     obj.remove("currency");
                     return obj.toString();
                 });
-        //Movements.toStream().peek((k,v) -> System.out.println(v));
+        Movements.toStream().peek((k,v) -> System.out.println("3: "+k+"|"+v));
 
         //Update Manager Revenue
         KTable<String, String> managerRevenue = paymentsInStream
@@ -148,46 +218,35 @@ public class SimpleStreams {
                         end.put("id",obj.getInt("id"));
                     }
                     return end.toString();});
-        //managerRevenue.toStream().peek((k,v) -> System.out.println(v));
 
-        //Calcular Windowed Balance
-        KTable<Windowed<String>, String> windowedMovements = creditsInStream.outerJoin(paymentsInStream, valueJoiner, JoinWindows.of(Duration.ofSeconds(10))).groupByKey()
-                .windowedBy(TimeWindows.of(TimeUnit.DAYS.toMillis(30*1)))
-                .reduce((oldvalue, newvalue) -> {
-                    JSONObject JSON_old = new JSONObject(oldvalue);
-                    JSONObject JSON_new = new JSONObject(newvalue);
+        //JOIN TABLES
+        KTable<String, String> Client = Movements.leftJoin(windowedMovementsTable, (left, right) -> {
+            JSONObject l = new JSONObject(left);
+            try {
+                JSONObject r = new JSONObject(right);
+                l.put("balance_last_month", r.getDouble("balance_last_month"));
+            } catch (JSONException e){
+                l.put("balance_last_month", 0);
+            } catch (NullPointerException e){
+                l.put("balance_last_month", 0);
+            }
+            return l.toString();
+        });
+        Client = Client.leftJoin(windowedPaymentsTable, (left, right) -> {
+            JSONObject l = new JSONObject(left);
+            try {
+                JSONObject r = new JSONObject(right);
+                l.put("payments_last_two_months", r.getInt("payments_last_two_months"));
+            } catch (JSONException e){
+                l.put("payments_last_two_months", 0);
+            } catch (NullPointerException e){
+                l.put("payments_last_two_months", 0);
+            }
+            return l.toString();
+        });
 
-                    Double amount = JSON_new.getDouble("amount");
-
-                    JSON_new.put("amount", JSON_old.getDouble("amount") + amount);
-                    return JSON_new.toString();
-                })
-                .mapValues((value) -> {
-                    JSONObject obj = new JSONObject(value);
-                    obj.put("balance_last_month", obj.getDouble("amount"));
-                    obj.remove("amount");
-                    obj.remove("manager_id");
-                    obj.remove("total_payments");
-                    obj.remove("total_credits");
-                    obj.remove("operation");
-                    obj.remove("currency");
-                    return obj.toString();
-                });
-        //windowedMovements.toStream().peek((k,v) -> System.out.println(v));
-
-        //Calcular Windowed Payments
-        KTable<Windowed<String>, String> windowedPayments = creditsInStream.outerJoin(paymentsInStream, valueJoiner, JoinWindows.of(Duration.ofSeconds(10))).groupByKey()
-                .windowedBy(TimeWindows.of(TimeUnit.SECONDS.toMillis(10)))
-                .count()
-                .mapValues((value) -> {
-                    JSONObject obj = new JSONObject();
-                    if (value > 0)
-                        obj.put("payments_last_two_month", 1);
-                    else
-                        obj.put("payments_last_two_month", 0);
-                    return obj.toString();
-                });
-        windowedPayments.toStream().peek((k,v) -> System.out.println(v));
+        //SEND STREAMS
+        Client.toStream().to("resultstopic");
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.cleanUp();

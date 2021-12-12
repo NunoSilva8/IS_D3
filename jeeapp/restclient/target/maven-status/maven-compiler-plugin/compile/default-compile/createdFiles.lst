@@ -3,3 +3,4 @@ entities\Currency.class
 book\App.class
 entities\Manager.class
 entities\Client.class
+book\App$1.class

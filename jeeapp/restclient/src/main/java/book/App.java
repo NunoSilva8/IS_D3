@@ -5,8 +5,10 @@ import entities.Retorno;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Scanner;
@@ -123,7 +125,7 @@ public class App {
     private static void addManager(Client client) {
         WebTarget target = client.target("http://localhost:8080/restws/rest/manager/add-manager");
         target = target.queryParam("managerName", "Picadasso");
-        Response response = target.request().get();
+        Response response = target.request().post(Entity.entity("cona", MediaType.APPLICATION_JSON));
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
         response.close();
