@@ -20,3 +20,8 @@ Manager:
 
 Currency:
 {"schema":{"type":"struct","fields":[{"type":"string","optional":false,"field":"name"},{"type":"float","optional":false,"field":"to_euro"}],"optional":false},"payload":{"name":"EURO","to_euro":1.0}}
+
+--------------------------------------------------------------
+
+cd C:\Users\Nuno\Desktop\IS\Assignment 3\wildfly-26.0.0.Beta1\bin
+standalone.bat

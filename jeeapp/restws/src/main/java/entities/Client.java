@@ -6,14 +6,14 @@ public class Client{
 
     private Integer id;
     private String name;
-    private Long balance;
-    private Long sumPayments;
-    private Long sumCredits;
+    private Double balance;
+    private Double sumPayments;
+    private Double sumCredits;
     private Manager manager;
 
     public Client(String name, Manager manager) {
         this.name = name;
-        this.balance = 0L;
+        this.balance = 0.0;
         this.manager = manager;
     }
 
@@ -33,9 +33,9 @@ public class Client{
         this.name = name;
     }
 
-    public Long getBalance() { return balance; }
+    public Double getBalance() { return balance; }
 
-    public void setBalance(Long balance) { this.balance = balance; }
+    public void setBalance(Double balance) { this.balance = balance; }
 
     public Manager getManager() {
         return manager;
@@ -45,20 +45,20 @@ public class Client{
         this.manager = manager;
     }
 
-    public Long getSumPayments() {
+    public Double getSumPayments() {
         return sumPayments;
     }
 
-    public Long getSumCredits() {
+    public Double getSumCredits() {
         return sumCredits;
     }
 
-    public void addCredit(Long amountInEuros){
+    public void addCredit(Double amountInEuros){
         this.balance += amountInEuros;
         this.sumCredits += amountInEuros;
     }
 
-    public void addPayment(Long amountInEuros){
+    public void addPayment(Double amountInEuros){
         this.balance -= amountInEuros;
         this.sumPayments += amountInEuros;
     }

@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) throws Exception {
         Boolean keepOnGoing = true;
-        Scanner scanf = new Scanner(System.in);
+        Scanner scanf;
         Integer opt = 0;
 
         Client client = ClientBuilder.newClient();
@@ -32,6 +32,7 @@ public class App {
         System.out.println("------------------------------------------------------\n");
 
         do{
+            scanf = new Scanner(System.in);
             System.out.println("Selecione a operação que deseja efetuar:\n\n");
             System.out.println("1. Adicionar um manager.");
             System.out.println("2. Adicionar um cliente.");
@@ -125,6 +126,7 @@ public class App {
 
     private static void addManager(Client client, Scanner scanf) {
         String managerName;
+        scanf = new Scanner(System.in);
         System.out.print("Insira o nome do manager: ");
         managerName = scanf.nextLine();
 
@@ -139,6 +141,7 @@ public class App {
     private static void addClient(Client client, Scanner scanf) {
         String clientName;
         Integer managerId;
+        scanf = new Scanner(System.in);
         System.out.print("Insira o nome do cliente: ");
         clientName = scanf.nextLine();
 
@@ -163,16 +166,15 @@ public class App {
     private static void addCurrency(Client client, Scanner scanf) {
 
         String currencyName;
-        Long toEuro;
+        Double toEuro;
+        scanf = new Scanner(System.in);
         System.out.print("Insira o nome da moeda: ");
         currencyName = scanf.nextLine();
 
         System.out.print("\nInsira o valor de troca para o Euro: ");
-        toEuro = scanf.nextLong();
+        toEuro = scanf.nextDouble();
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-currency");
-        target = target.queryParam("currencyName", "Dollar");
-        target = target.queryParam("exchangeToEuro", 0.88);
         Response response = target.request().post(Entity.entity(
                 new Currency(currencyName, toEuro),
                 MediaType.APPLICATION_JSON)

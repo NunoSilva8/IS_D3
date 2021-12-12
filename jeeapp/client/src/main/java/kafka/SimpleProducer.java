@@ -41,12 +41,12 @@ public class SimpleProducer {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
         Boolean keepOnGoing = true;
-        Long amount;
+        Double amount;
         List<Currency> currencies = new ArrayList<>();
         Currency selectedCurrency;
         Random rand;
         List<String> typeOfOperation = new ArrayList<>(List.of("Credit", "Payment"));
-        String key = "227";
+        String key = "229";
 
         producer.send(new ProducerRecord<String, String>(creditsTopic, key, creditToStream("EUR", 10.0, Integer.parseInt(key))));
         /*

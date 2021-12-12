@@ -59,7 +59,7 @@ public class ApplicationController {
     @Path("/get-client-credit")
     public String getClientCredit(){
         String clientName = "HARDCODE";
-        Long clientCredit = 123L;
+        Double clientCredit = 123.0;
         return  "O crédito do cliente " + clientName + "é de " + clientCredit;
     }
 
@@ -67,7 +67,7 @@ public class ApplicationController {
     @Path("/get-client-payments")
     public String getClientPayments(){
         String clientName = "HARDCODE";
-        Long clientPayment = 123L;
+        Double clientPayment = 123.0;
         return "O pagamento do cliente " + clientName + "é de " + clientPayment;
     }
 
@@ -75,28 +75,28 @@ public class ApplicationController {
     @Path("/get-client-balance")
     public String getClientBalance(){
         String clientName = "HARDCODE";
-        Long clientBalance = 123L;
+        Double clientBalance = 123.0;
         return "O balance do cliente " + clientName + "é de " + clientBalance;
     }
 
     @GET
     @Path("/get-clients-credit")
     public String getClientsCredit(){
-        Long clientsCredit = 123L;
+        Double clientsCredit = 123.0;
         return "A soma dos créditos dos clientes é de " + clientsCredit;
     }
 
     @GET
     @Path("/get-clients-payments")
     public String getClientsPayments(){
-        Long clientsPayments = 123L;
+        Double clientsPayments = 123.0;
         return "A soma dos pagamentos dos clientes é de " + clientsPayments;
     }
 
     @GET
     @Path("/get-clients-balance")
     public String getClientsBalance(){
-        Long clientsBalance = 123L;
+        Double clientsBalance = 123.0;
         return "A soma dos balances dos clientes é de " + clientsBalance;
     }
 
@@ -104,7 +104,7 @@ public class ApplicationController {
     @Path("/get-client-bill-last-month")
     public String getClientBillLastMonth(){
         String clientName = "HARDCODE";
-        Long clientBill = 123L;
+        Double clientBill = 123.0;
         return "A conta do clientes é de " + clientName + " durante o último mês é de " + clientBill;
     }
 
