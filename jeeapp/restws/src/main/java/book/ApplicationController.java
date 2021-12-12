@@ -1,18 +1,30 @@
 package book;
+
 import entities.Client;
-import entities.Retorno;
+import entities.Currency;
+import entities.Manager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/client")
-@Produces(MediaType.APPLICATION_JSON)
-public class ClientController {
+import static database.DataBaseUtils.*;
 
-    public ClientController() {
+@Path("/app")
+@Produces(MediaType.APPLICATION_JSON)
+public class ApplicationController {
+
+    private Connection dbConnection;
+
+    public ApplicationController() throws SQLException {
+        dbConnection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
     }
+
+    /******CLIENT SECTION******/
 
     /**
      *
@@ -109,4 +121,67 @@ public class ClientController {
         return "O cliente com maior dívida é o cliente " + clientName;
     }
 
+    /******MANAGER SECTION******/
+
+    /**
+     * add manager method
+     * @param managerName
+     * @return
+     */
+    @POST
+    @Path("/add-manager")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addManager(String managerName){
+         /*
+            0? Verificar se managerName existe?
+
+            1. Add manager
+            2. Return success
+         */
+        return "Manager criado com sucesso";
+    }
+
+    @GET
+    @Path("/get-managers")
+    public String getManagers(){
+        List<Manager> managers = new ArrayList<>();
+
+        return "getManagers";
+    }
+
+    @GET
+    @Path("/get-manager-most-revenue")
+    public String getManagersMostRevenue(){
+        List<Manager> managers = new ArrayList<>();
+
+        return "Manager com mais revenue.";
+    }
+
+    /******CURRENCY SECTION******/
+
+    /**
+     *
+     * @param currency
+     * @return
+     */
+    @POST
+    @Path("/add-currency")
+
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addCurrency(Currency currency){
+         /*
+            1. If currencyName existe => return erro
+            2. Else...
+            2.1. Add currency
+            2.2. Return success
+         */
+        return "Currency criada com sucesso";
+    }
+
+    @GET
+    @Path("/get-currencies")
+    public String getCurrencies(){
+        List<Currency> currencies = new ArrayList<>();
+        return "Lista de currencies.";
+    }
 }
