@@ -38,12 +38,12 @@ public class ApplicationController {
         try{
             PreparedStatement ps = dbConnection.prepareStatement(INSERT_CLIENT);
             ps.setString(1, client.getName());
-            ps.setString(2, "0");
+            ps.setDouble(2, 0.0);
             ps.setString(3, client.getManager().getId().toString());
-            ps.setString(4, "0");
-            ps.setString(5, "0");
-            ps.setString(6, "0");
-            ps.setString(7, "0");
+            ps.setDouble(4, 0.0);
+            ps.setDouble(5, 0.0);
+            ps.setDouble(6, 0.0);
+            ps.setDouble(7, 0.0);
 
             ps.executeUpdate();
             ps.close();
@@ -309,11 +309,11 @@ public class ApplicationController {
         try{
             PreparedStatement ps = dbConnection.prepareStatement(INSERT_MANAGER);
             ps.setString(1, managerName);
-            ps.setString(2, "0");
 
             ps.executeUpdate();
             ps.close();
         }catch(SQLException e){
+            e.printStackTrace();
             return "[DATABASE ERROR] Erro ao criar manager.";
         }
 
@@ -384,7 +384,7 @@ public class ApplicationController {
         try{
             PreparedStatement ps = dbConnection.prepareStatement(INSERT_CURRENCY);
             ps.setString(1, currency.getName());
-            ps.setString(2, currency.getToEuro().toString());
+            ps.setDouble(2, currency.getToEuro());
 
             ps.executeUpdate();
             ps.close();
@@ -401,7 +401,7 @@ public class ApplicationController {
         String currenciesAsString = "";
 
         try{
-            PreparedStatement ps = dbConnection.prepareStatement(SELECT_ALL_MANAGERS);
+            PreparedStatement ps = dbConnection.prepareStatement(SELECT_ALL_CURRENCIES);
 
             ResultSet rSet = ps.executeQuery();
 

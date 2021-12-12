@@ -132,7 +132,7 @@ public class App {
 
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/add-manager");
         target = target.queryParam("managerName", "Picadasso");
-        Response response = target.request().post(Entity.entity(new Manager(managerName), MediaType.APPLICATION_JSON));
+        Response response = target.request().post(Entity.entity(managerName, MediaType.APPLICATION_JSON));
         String retorno = response.readEntity(String.class);
         System.out.println(retorno);
         response.close();
@@ -272,8 +272,8 @@ public class App {
     private static void getTotalBalance(Client client) {
         WebTarget target = client.target("http://localhost:8080/restws/rest/app/get-clients-balance");
         Response response = target.request().get();
-        Retorno retorno = response.readEntity(Retorno.class);
-        System.out.println(retorno.toString());
+        String retorno = response.readEntity(String.class);
+        System.out.println(retorno);
         response.close();
     }
 

@@ -11,7 +11,7 @@ public interface InsertQueries {
 
     String INSERT_MANAGER = "INSERT INTO " + MANAGER_TABLE_NAME +
             " (" + MANAGER_NAME + ", " + MANAGER_REVENUE + ")" +
-            " VALUES (?, ?)";
+            " VALUES (?, 0)";
 
     String INSERT_CURRENCY = "INSERT INTO " + CURRENCY_TABLE_NAME +
             " (" + CURRENCY_NAME + ", " + CURRENCY_TO_EURO + ")" +
