@@ -1,2 +1,5 @@
 0
-0
+3
+exercises-application-KSTREAM-TOTABLE-0000000012-repartition 0 31
+exercises-application-KSTREAM-TOTABLE-0000000022-repartition 0 31
+exercises-application-KSTREAM-REDUCE-STATE-STORE-0000000031-repartition 0 68

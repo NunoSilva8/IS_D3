@@ -34,26 +34,51 @@ public class SimpleStreams {
         JSONObject currencies = new JSONObject();
 
         //CURRENCY PROPS
-        Properties propsConsumer = new Properties();
-        propsConsumer.put("bootstrap.servers", "localhost:9092");
-        propsConsumer.put("acks", "all");
-        propsConsumer.put("retries", 0);
-        propsConsumer.put("batch.size", 16384);
-        propsConsumer.put("linger.ms", 1);
-        propsConsumer.put("buffer.memory", 33554432);
-        propsConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsCurrencyConsumer");
-        propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        propsConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        Properties propsCurrencyConsumer = new Properties();
+        propsCurrencyConsumer.put("bootstrap.servers", "localhost:9092");
+        propsCurrencyConsumer.put("acks", "all");
+        propsCurrencyConsumer.put("retries", 0);
+        propsCurrencyConsumer.put("batch.size", 16384);
+        propsCurrencyConsumer.put("linger.ms", 1);
+        propsCurrencyConsumer.put("buffer.memory", 33554432);
+        propsCurrencyConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsCurrencyConsumer");
+        propsCurrencyConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsCurrencyConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-        Consumer<String, String> consumer = new KafkaConsumer<>(propsConsumer);
-        consumer.subscribe(Collections.singletonList("db-info-currency"));
-        ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
-        for (ConsumerRecord<String, String> record : records) {
+        Consumer<String, String> currencyConsumer = new KafkaConsumer<>(propsCurrencyConsumer);
+        currencyConsumer.subscribe(Collections.singletonList("db-info-currency"));
+        ConsumerRecords<String, String> currencyRecords = currencyConsumer.poll(Long.MAX_VALUE);
+        for (ConsumerRecord<String, String> record : currencyRecords) {
             JSONObject coin = new JSONObject(record.value());
             coin = coin.getJSONObject("payload");
             currencies.put(coin.getString("name"), coin.getDouble("to_euro"));
         }
-        consumer.close();
+        currencyConsumer.close();
+
+        //MANAGERS
+        JSONObject managers = new JSONObject();
+
+        //MANAGERS PROPS
+        Properties propsManagerConsumer = new Properties();
+        propsManagerConsumer.put("bootstrap.servers", "localhost:9092");
+        propsManagerConsumer.put("acks", "all");
+        propsManagerConsumer.put("retries", 0);
+        propsManagerConsumer.put("batch.size", 16384);
+        propsManagerConsumer.put("linger.ms", 1);
+        propsManagerConsumer.put("buffer.memory", 33554432);
+        propsManagerConsumer.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaStreamsManagerConsumer");
+        propsManagerConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        propsManagerConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        Consumer<String, String> managerConsumer = new KafkaConsumer<>(propsManagerConsumer);
+        managerConsumer.subscribe(Collections.singletonList("db-info-manager"));
+        ConsumerRecords<String, String> managerRecords = managerConsumer.poll(Long.MAX_VALUE);
+        for (ConsumerRecord<String, String> record : managerRecords) {
+            JSONObject manager = new JSONObject(record.value());
+            manager = manager.getJSONObject("payload");
+            managers.put(String.valueOf(manager.getInt("id")), manager);
+        }
+        managerConsumer.close();
 
         ValueJoiner<String, String, String> valueJoiner = (credito, pagamento) -> {
             JSONObject obj = null;
@@ -206,6 +231,9 @@ public class SimpleStreams {
                     } else {
                         end.put("id",obj.getInt("id"));
                     }
+
+                    JSONObject manager = managers.getJSONObject(String.valueOf(end.getInt("id")));
+                    end.put("name", manager.getString("name"));
                     return end.toString();});
 
         //JOIN TABLES - Esta a duplicar entradas em vez de dar merge. Porem a ultima e sempre a mais atualizada.
@@ -235,28 +263,51 @@ public class SimpleStreams {
         });
 
         //SEND STREAMS
-        Client.toStream().peek((k,v) -> System.out.println("FINAL: "+k+"|"+v));
-        managerRevenue.toStream().peek((k,v) -> System.out.println("FINAL: "+k+"|"+v));
+        Client
+                .toStream()
+                .mapValues((v) -> CLIENT_SCHEMA(new JSONObject(v)))
+                .to("client");
+        managerRevenue
+                .toStream()
+                .mapValues((v) -> MANAGER_SCHEMA(new JSONObject(v)))
+                .to("manager");
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.cleanUp();
         streams.start();
 
-        consumer = new KafkaConsumer<>(propsConsumer);
-        consumer.subscribe(Collections.singletonList("db-info-currency"));
         do {
-            records = consumer.poll(1000L);
-            for (ConsumerRecord<String, String> record : records) {
+            currencyConsumer = new KafkaConsumer<>(propsCurrencyConsumer);
+            currencyConsumer.subscribe(Collections.singletonList("db-info-currency"));
+            currencyRecords = currencyConsumer.poll(1000L);
+            for (ConsumerRecord<String, String> record : currencyRecords) {
                 JSONObject coin = new JSONObject(record.value());
                 coin = coin.getJSONObject("payload");
                 currencies.put(coin.getString("name"), coin.getDouble("to_euro"));
             }
+            currencyConsumer.close();
+
+            managerConsumer = new KafkaConsumer<>(propsManagerConsumer);
+            managerConsumer.subscribe(Collections.singletonList("db-info-manager"));
+            managerRecords = managerConsumer.poll(1000L);
+            for (ConsumerRecord<String, String> record : managerRecords) {
+                JSONObject manager = new JSONObject(record.value());
+                manager = manager.getJSONObject("payload");
+                managers.put(String.valueOf(manager.getInt("id")), manager);
+            }
+            managerConsumer.close();
         }while (true);
     }
     
 
     public static String CLIENT_SCHEMA(JSONObject Payload) {
         JSONObject JSON = new JSONObject("{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"int64\",\"optional\":false,\"field\":\"id\"},{\"type\":\"string\",\"optional\":false,\"field\":\"name\"},{\"type\":\"double\",\"optional\":false,\"field\":\"balance\"},{\"type\":\"int64\",\"optional\":false,\"field\":\"manager_id\"},{\"type\":\"double\",\"optional\":false,\"field\":\"payment_total\"},{\"type\":\"double\",\"optional\":false,\"field\":\"credit_total\"},{\"type\":\"int8\",\"optional\":false,\"field\":\"payments_last_two_months\"},{\"type\":\"double\",\"optional\":false,\"field\":\"balance_last_month\"}],\"optional\":false}}");
+        JSON.put("payload", Payload);
+        return JSON.toString();
+    }
+
+    public static String MANAGER_SCHEMA(JSONObject Payload) {
+        JSONObject JSON = new JSONObject("{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"int64\",\"optional\":false,\"field\":\"id\"},{\"type\":\"string\",\"optional\":false,\"field\":\"name\"},{\"type\":\"double\",\"optional\":false,\"field\":\"revenue\"}],\"optional\":false}}");
         JSON.put("payload", Payload);
         return JSON.toString();
     }
